@@ -24,16 +24,6 @@ module.exports = function (grunt) {
     // Define the configuration for all the tasks
     grunt.initConfig({
 
-        convert: {
-            options: {
-                explicitArray: false,
-            },
-            csv2json: {
-                src: '<%= config.app %>/data/budget.csv',
-                dest: '<%= config.app %>/data/budget.json'
-            }
-        },
-
         // Project settings
         config: config,
 
@@ -56,6 +46,10 @@ module.exports = function (grunt) {
             },
             gruntfile: {
                 files: ['Gruntfile.js']
+            },
+            sass: {
+                files: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
+                tasks: ['sass:dist', 'autoprefixer']
             },
             styles: {
                 files: ['<%= config.app %>/styles/{,*/}*.css'],
@@ -271,10 +265,13 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         'images/{,*/}*.webp',
                         '{,*/}*.html',
-                        'styles/fonts/{,*/}*.*',
-                        'data/budget.json'
+                        'styles/fonts/{,*/}*.*'
                     ]
                 }]
+            },
+            data: {
+                src: '.tmp/data/budget.json',
+                dest: '<%= config.dist %>/data/budget.json'
             },
             styles: {
                 expand: true,
@@ -322,11 +319,21 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= config.app %>/styles',
                     src: ['*.scss'],
-                    dest: '<%= config.app %>/styles',
+                    dest: '.tmp/styles',
                     ext: '.css'
                 }]
             }
-        }
+        },
+
+        convert: {
+            options: {
+                explicitArray: false,
+            },
+            csv2json: {
+                src: '<%= config.app %>/data/budget.csv',
+                dest: '.tmp/data/budget.json'
+            }
+        },
     });
 
 
@@ -360,6 +367,7 @@ module.exports = function (grunt) {
         'uglify',
         'convert',
         'copy:dist',
+        'copy:data',
         'rev',
         'usemin',
         'htmlmin'
