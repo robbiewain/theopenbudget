@@ -295,7 +295,7 @@ module.exports = function (grunt) {
                 options: {
                     src: '<%= config.dist %>/',
                     dest: '/home/ubuntu/theopenbudget',
-                    host: 'andthen',
+                    host: 'theopenbudget',
                     syncDestIgnoreExcl: true
                 }
             }
