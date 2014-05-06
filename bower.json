@@ -1,0 +1,8 @@
+{
+  "name": "theopenbudget",
+  "private": true,
+  "dependencies": {
+    "d3": "~3.4.6"
+  },
+  "devDependencies": {}
+}
