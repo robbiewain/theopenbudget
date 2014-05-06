@@ -12,20 +12,16 @@ Instructions
 ============
 
 Install Yeoman toolset (if you haven't already)
-
 npm install --g yo
 
 
 Run development server
-
 grunt serve
 
 
 Create dist folder to deploy
-
 grunt
 
 
 Upload to production server
-
 grunt deploy
