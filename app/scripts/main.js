@@ -1,24 +1,26 @@
+'use strict';
+
 function populateSidebar(budgetItem) {
-  name = (budgetItem.name == "total" ? "Total Government Expenditure" : budgetItem.name)
-  $("#item_name").text(name)
-  $("#value12_13").text("$" + add_commas(round_to_dp(budgetItem.value12_13/1000,0).toString()) + " million")
-  $("#value13_14").text("$" + add_commas(round_to_dp(budgetItem.value13_14/1000,0).toString()) + " million")
-  $("#value_change").text(round_to_dp(100*budgetItem.value13_14/budgetItem.value12_13 - 100, 1).toString() + "%");
-  $("#individual_taxpayer").text("$" + add_commas(round_to_dp(budgetItem.value13_14*1000/23022031, 2).toString()));
-  if (!budgetItem.children) {
-    $("#item_description").text(budgetItem.description || "None available");
-    $("#item_source").html("<a href='" + budgetItem.source_url + "'>" + budgetItem.source_name + "</a>");
-  } else {
-    $("#item_description").text(budgetItem.description || "None available");
-    $("#item_source").html("");
-  }
+    name = (budgetItem.name === 'total' ? 'Total Government Expenditure' : budgetItem.name);
+    $('#item_name').text(name);
+    $('#value12_13').text('$' + addCommas(roundToDP(budgetItem.value12_13/1000,0).toString()) + ' million');
+    $('#value13_14').text('$' + addCommas(roundToDP(budgetItem.value13_14/1000,0).toString()) + ' million');
+    $('#value_change').text(roundToDP(100*budgetItem.value13_14/budgetItem.value12_13 - 100, 1).toString() + '%');
+    $('#individual_taxpayer').text('$' + addCommas(roundToDP(budgetItem.value13_14*1000/23022031, 2).toString()));
+    if (!budgetItem.children) {
+      $('#item_description').text(budgetItem.description || 'None available');
+      $('#item_source').html('<a href="' + budgetItem.source_url + '">' + budgetItem.source_name + '</a>');
+    } else {
+      $('#item_description').text(budgetItem.description || 'None available');
+      $('#item_source').html('');
+    }
 }
 
-function add_commas(string){
-  return string.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+function addCommas(string){
+  return string.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
 }
 
-function round_to_dp(number, decimal_places){
+function roundToDP(number, decimal_places){
   factor = Math.pow(10,decimal_places);
   return Math.round(factor*number)/factor;
 }
@@ -30,16 +32,16 @@ var width = 700,
 
 var currentYear = '13_14';
 
-var vis = d3.select("#chart").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-//  .append("g")
-//    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+var vis = d3.select('#chart').append('svg')
+    .attr('width', width)
+    .attr('height', height);
+//  .append('g')
+//    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
 // group for pie
-var pie_group = vis.append("svg:g")
-    .attr("class", "pie")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+var pie_group = vis.append('svg:g')
+    .attr('class', 'pie')
+    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
 var partition = d3.layout.partition()
     .sort(null)
@@ -52,32 +54,32 @@ var arc = d3.svg.arc()
     .innerRadius(function(d) { return Math.sqrt(d.y); })
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
-d3.json("/data/budget.json", function(json) {
+d3.json('/data/budget.json', function(json) {
 
-    path = pie_group.data([json]).selectAll("path")
-          .data(partition.nodes).enter().append("path")
-          .attr("d", arc)
-          .attr("fill-rule", "evenodd")
-          .style("opacity", 0.6)
-          .style("stroke", "#fff")
-          .style("fill", function(d, i) {
+    path = pie_group.data([json]).selectAll('path')
+          .data(partition.nodes).enter().append('path')
+          .attr('d', arc)
+          .attr('fill-rule', 'evenodd')
+          .style('opacity', 0.6)
+          .style('stroke', '#fff')
+          .style('fill', function(d, i) {
              if (d.depth == 0) {
                return '#fff';
              }
              return color(i);
            })
            .each(stash)
-           .on("click", function(d) {
+           .on('click', function(d) {
              window.location.hash = '#' + encodeURIComponent(d.name);
              dive(d);
            })
-           .on("mouseover", function(d) {
+           .on('mouseover', function(d) {
              highlight(d);
              populateSidebar(d);
            });
     updatePie(currentYear);
     if (window.location.hash){
-      current_element = findElementFromName(decodeURIComponent(window.location.hash.replace("#", "")));
+      current_element = findElementFromName(decodeURIComponent(window.location.hash.replace('#', '')));
       dive(current_element);
       populateSidebar(current_element);
     } else {
@@ -93,25 +95,25 @@ $('#13_14').click(function() {
 });
 
 // group for centre text
-var centre_group = vis.append("svg:g")
-  .attr("class", "centre_group")
-  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+var centre_group = vis.append('svg:g')
+  .attr('class', 'centre_group')
+  .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-var totalLabel = centre_group.append("svg:text")
-  .attr("class", "total_head")
-  .attr("dy", -15)
-  .attr("text-anchor", "middle") // text-align: right
-  .text("");
-centre_group.append("svg:text")
-  .attr("class", "total_body")
-  .attr("dy", 15)
-  .attr("text-anchor", "middle") // text-align: right
-  .text("");
-  centre_group.append("svg:text")
-    .attr("class", "click_reset")
-    .attr("dy", 60)
-    .attr("text-anchor", "middle") // text-align: right
-    .text("click to zoom out");
+var totalLabel = centre_group.append('svg:text')
+  .attr('class', 'total_head')
+  .attr('dy', -15)
+  .attr('text-anchor', 'middle') // text-align: right
+  .text('');
+centre_group.append('svg:text')
+  .attr('class', 'total_body')
+  .attr('dy', 15)
+  .attr('text-anchor', 'middle') // text-align: right
+  .text('');
+  centre_group.append('svg:text')
+    .attr('class', 'click_reset')
+    .attr('dy', 60)
+    .attr('text-anchor', 'middle') // text-align: right
+    .text('click to zoom out');
 
 // Stash the old values for transition.
 function stash(d) {
@@ -132,8 +134,8 @@ function arcTween(a) {
 
 function dive(element) {
   // reset all values if click total
-  if (element.name == "total") {
-    $(".click_reset").hide();
+  if (element.name == 'total') {
+    $('.click_reset').hide();
     updatePie(currentYear);
   }
   else {
@@ -151,9 +153,9 @@ function dive(element) {
   }))
     .transition()
     .duration(1500)
-    .attrTween("d", arcTween);
+    .attrTween('d', arcTween);
     updatePieAnnotation(element);
-    $(".click_reset").show();
+    $('.click_reset').show();
   }
 }
 
@@ -186,15 +188,15 @@ function updatePie(year) {
     }))
         .transition()
           .duration(1500)
-          .attrTween("d", arcTween);
+          .attrTween('d', arcTween);
   currentYear = year;
 
-  updatePieAnnotation(findElementFromName("total"))
+  updatePieAnnotation(findElementFromName('total'))
 }
 
 function highlight(budgetItem) {
-  d3.selectAll("path")
-         .style("opacity", function(d) {
+  d3.selectAll('path')
+         .style('opacity', function(d) {
   if (d.name != budgetItem.name && !isChild(d, budgetItem.name)) {
     return 0.6;
   } else {
@@ -211,7 +213,7 @@ function commaSeparateNumber(val){
 
 function findElementFromName(name){
   element = null;
-  pie_group.selectAll("path").data(partition.nodes).each(function(d){
+  pie_group.selectAll('path').data(partition.nodes).each(function(d){
     if (d.name == name){
       element = d;
     }
@@ -220,16 +222,16 @@ function findElementFromName(name){
 }
 
 function updatePieAnnotation(element){
-  $(".total_body").text("$" + commaSeparateNumber((element.value/1000).toFixed(0)) + "m");
-  if (element.name == "total") {
-    $(".total_head").text("Total Government Expenditure");
+  $('.total_body').text('$' + commaSeparateNumber((element.value/1000).toFixed(0)) + 'm');
+  if (element.name == 'total') {
+    $('.total_head').text('Total Government Expenditure');
   } else {
-    $(".total_head").text(element.name);
+    $('.total_head').text(element.name);
   }
 }
 
-$(".total_head, .total_body, .click_reset").click(function(){
-  dive(findElementFromName("total"));
+$('.total_head, .total_body, .click_reset').click(function(){
+  dive(findElementFromName('total'));
 });
 
-$(".click_reset").hide();
+$('.click_reset').hide();

@@ -273,6 +273,10 @@ module.exports = function (grunt) {
                 src: '.tmp/data/budget.json',
                 dest: '<%= config.dist %>/data/budget.json'
             },
+            csv: {
+                src: '<%= config.app %>/data/budget.csv',
+                dest: '<%= config.dist %>/data/budget.csv'
+            },
             styles: {
                 expand: true,
                 dot: true,
@@ -331,9 +335,9 @@ module.exports = function (grunt) {
             },
             csv2json: {
                 src: '<%= config.app %>/data/budget.csv',
-                dest: '.tmp/data/budget.json'
+                dest: '.tmp/data/budgetcsv.json'
             }
-        },
+        }
     });
 
 
@@ -366,8 +370,10 @@ module.exports = function (grunt) {
         'cssmin',
         'uglify',
         'convert',
+        'processJSON',
         'copy:dist',
         'copy:data',
+        'copy:csv',
         'rev',
         'usemin',
         'htmlmin'
@@ -386,4 +392,163 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-convert');
     grunt.loadNpmTasks('grunt-rsync');
     grunt.loadNpmTasks('grunt-contrib-sass');
+
+    grunt.registerTask('processJSON', 'A task that creates a hierarchial json format.', function() {
+        var src = '.tmp/data/budgetcsv.json';
+        var dest = '.tmp/data/budget.json';
+        var csvData = JSON.parse(grunt.file.read(src));
+        var data = {
+            name: 'total',
+            value1213: 0,
+            value1314: 0,
+            value1415: 0,
+            value1516: 0,
+            value1617: 0,
+            children: []
+        };
+
+        function lookup(arr, name) {
+            for(var i = 0, len = arr.length; i < len; i++) {
+                if( arr[i].name === name )
+                    return true;
+            }
+            return false;
+        }
+
+        csvData.forEach(function(row) {
+            var portfolio = row['Portfolio'];
+            var department = row['Department/Agency'];
+            var outcome = row['Outcome'];
+            var program = row['Program'];
+            var expenseType = row['Expense type'];
+            var appropriationType = row['Appropriation type'];
+            var description = row['Description'];
+            var value1213 = parseFloat(row['2012-13']);
+            var value1314 = parseFloat(row['2013-14']);
+            var value1415 = parseFloat(row['2014-15']);
+            var value1516 = parseFloat(row['2015-16']);
+            var value1617 = parseFloat(row['2016-17']);
+            var sourceDocument = row['Source document'];
+            var sourceTable = row['Source table'];
+            var url = row['URL'];
+
+            function getProgram() {
+                return {
+                    name: program,
+                    value1213: value1213,
+                    value1314: value1314,
+                    value1415: value1415,
+                    value1516: value1516,
+                    value1617: value1617,
+                    expense_type: expenseType,
+                    appropriation_type: appropriationType,
+                    description: description,
+                    source_document: sourceDocument,
+                    source_table: sourceTable,
+                    url: url
+                };
+            }
+            function getOutcome() {
+                return {
+                    name: outcome,
+                    value1213: value1213,
+                    value1314: value1314,
+                    value1415: value1415,
+                    value1516: value1516,
+                    value1617: value1617,
+                    children: [getProgram()]
+                }
+            }
+            function getDepartment() {
+                return {
+                    name: department,
+                    value1213: value1213,
+                    value1314: value1314,
+                    value1415: value1415,
+                    value1516: value1516,
+                    value1617: value1617,
+                    children: [getOutcome()]
+                }
+            }
+            function getPortfolio() {
+                return {
+                    name: portfolio,
+                    value1213: value1213,
+                    value1314: value1314,
+                    value1415: value1415,
+                    value1516: value1516,
+                    value1617: value1617,
+                    children: [getDepartment()]
+                }
+            }
+
+            // Add to total
+            data['value1213'] += value1213;
+            data['value1314'] += value1314;
+            data['value1415'] += value1415;
+            data['value1516'] += value1516;
+            data['value1617'] += value1617;
+
+            var portfolios = data['children'];
+            // Create portfolio level if it doesnt exist
+            if (!lookup(portfolios, portfolio)) {
+                portfolios.push(getPortfolio());
+            } else {
+                // Add to the cummulative portfolio total
+                for(var i = 0, len = portfolios.length; i < len; i++) {
+                    if(portfolios[i].name === portfolio) {
+                        portfolios[i]['value1213'] += value1213;
+                        portfolios[i]['value1314'] += value1314;
+                        portfolios[i]['value1415'] += value1415;
+                        portfolios[i]['value1516'] += value1516;
+                        portfolios[i]['value1617'] += value1617;
+
+                        var departments = portfolios[i]['children'];
+                        // Create department level if it doesnt exist
+                        if (!lookup(departments, department)) {
+                            departments.push(getDepartment());
+                        } else {
+                            // Add to the cummulative department total
+                            for(var i = 0, len = departments.length; i < len; i++) {
+                                if(departments[i].name === department) {
+                                    departments[i]['value1213'] += value1213;
+                                    departments[i]['value1314'] += value1314;
+                                    departments[i]['value1415'] += value1415;
+                                    departments[i]['value1516'] += value1516;
+                                    departments[i]['value1617'] += value1617;
+
+                                    var outcomes = departments[i]['children'];
+                                    // Create outcome level if it doesnt exist
+                                    if (!lookup(outcomes, outcome)) {
+                                        outcomes.push(getOutcome());
+                                    } else {
+                                        // Add to the cummulative outcome total
+                                        for(var i = 0, len = outcomes.length; i < len; i++) {
+                                            if(outcomes[i].name === outcome) {
+                                                outcomes[i]['value1213'] += value1213;
+                                                outcomes[i]['value1314'] += value1314;
+                                                outcomes[i]['value1415'] += value1415;
+                                                outcomes[i]['value1516'] += value1516;
+                                                outcomes[i]['value1617'] += value1617;
+
+                                                // Always add program even if its a duplicate
+                                                var programs = outcomes[i]['children'];
+                                                programs.push(getProgram());
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+
+        grunt.file.write(dest, JSON.stringify(data, null, '\t'));
+
+        grunt.log.ok('File ' + src + ' converted to ' + dest + ' OK'.green);
+    });
 };
