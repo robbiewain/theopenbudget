@@ -2,10 +2,11 @@
 <html class="no-js">
     <head>
         <meta charset="utf-8">
-        <title>TheOpenBudget.org</title>
-        <meta name="description" content="A cutting edge government transparency project, allowing you to quickly and easily explore where the Australian government spends your money.">
+        <title>Where does the government spend its money? TheOpenBudget.Org</title>
+        <meta name="description" content="Find out where your Australian taxes are going with our government expenditure data and visualisation!">
         <meta name="viewport" content="width=device-width">
         <link rel="shortcut icon" href="/favicon.ico">
+        <link href="http://fonts.googleapis.com/css?family=Droid Serif&amp;subset=latin" rel="stylesheet" type="text/css">
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
         <!-- endbower -->
@@ -76,15 +77,9 @@
   <div id="footer">Want to use this data for your own purposes? Be our guest! Check out the <a href="data/budget.json">json export</a>, or <a href="data/budget.csv">download your own .csv</a>. Or get the code from <a href="https://github.com/robbiewain/theopenbudget">github</a>.<br/>TheOpenBudget was originally developed for GovHack 2012, and built by a team from <a href="http://www.prosple.com.au">Prosple</a> and <a href="http://www.ozdocsonline.com.au">OzDocsOnline</a>. Questions, comments, complaints? <a href="https://twitter.com/theopenbudget">Hit us up on Twitter</a>.</div>
 </div>
 
-<script>
-  $("button").click(function(){
-    $(this).addClass("active").siblings().removeClass("active");
-  });
-</script>
-
-
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
+        <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/d3/d3.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
@@ -101,5 +96,11 @@
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
+
+        <script>
+          $("button").click(function(){
+            $(this).addClass("active").siblings().removeClass("active");
+          });
+        </script>
 </body>
 </html>
