@@ -28,10 +28,10 @@
     <h1>TheOpenBudget.org</h1>
     <h2>A cutting edge government transparency project, allowing you to quickly and easily explore where the Australian government spends your money.</h2>
    <div class="option">
-      <button class='first active year_toggle' id='13_14'>
+      <button class='first active year_toggle' id='1314'>
         13-14 Budget
       </button>
-      <button class='last year_toggle' id='12_13'>
+      <button class='last year_toggle' id='1213'>
         12-13 Actual
       </button>
     </div>
@@ -43,12 +43,12 @@
       </div>
       <div class="row">
         <div class="label">12-13 Actual:</div>
-        <div id="value12_13" class="value"></div>
+        <div id="value1213" class="value"></div>
         <div class="clear"></div>
       </div>
       <div class="row">
         <div class="label">13-14 Budget:</div>
-        <div id="value13_14" class="value"></div>
+        <div id="value1314" class="value"></div>
         <div class="clear"></div>
       </div>
       <div class="row">
@@ -98,7 +98,7 @@
         <!-- endbuild -->
 
         <script>
-          $("button").click(function(){
+          $("button").click(function() {
             $(this).addClass("active").siblings().removeClass("active");
           });
         </script>
