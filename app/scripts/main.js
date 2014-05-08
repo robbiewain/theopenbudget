@@ -388,3 +388,83 @@ $('.total_head, .total_body, .click_reset').click(function() {
 });
 
 $('.click_reset').hide();
+
+var portfolios = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: '/data/portfolios.json',
+});
+
+var departments = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('d'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: '/data/departments.json'
+});
+
+var outcomes = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('o'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: '/data/outcomes.json'
+});
+
+var programs = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('p'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: '/data/programs.json'
+});
+
+var descriptions = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('d'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: '/data/descriptions.json'
+});
+
+portfolios.initialize();
+departments.initialize();
+outcomes.initialize();
+programs.initialize();
+descriptions.initialize();
+
+$('#searchBox').typeahead({
+      highlight: true
+    },
+    {
+      name: 'portfolios',
+      displayKey: 'p',
+      source: portfolios.ttAdapter(),
+      templates: {
+        header: '<h3 class="searchHeading">Portfolios</h3>'
+      }
+    },
+    {
+      name: 'departments',
+      displayKey: 'd',
+      source: departments.ttAdapter(),
+      templates: {
+        header: '<h3 class="searchHeading">Departments</h3>'
+      }
+    },
+    {
+      name: 'outcomes',
+      displayKey: 'o',
+      source: outcomes.ttAdapter(),
+      templates: {
+        header: '<h3 class="searchHeading">Outcomes</h3>'
+      }
+    },
+    {
+      name: 'programs',
+      displayKey: 'p',
+      source: programs.ttAdapter(),
+      templates: {
+        header: '<h3 class="searchHeading">Programs</h3>'
+      }
+    },
+    {
+      name: 'descriptions',
+      displayKey: 'd',
+      source: descriptions.ttAdapter(),
+      templates: {
+        header: '<h3 class="searchHeading">Descriptions</h3>'
+      }
+    });

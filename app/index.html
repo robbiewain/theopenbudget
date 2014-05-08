@@ -27,7 +27,10 @@
   <div id="sidebar">
     <h1>TheOpenBudget.org</h1>
     <h2>A cutting edge government transparency project, allowing you to quickly and easily explore where the Australian government spends your money.</h2>
-   <div class="option">
+    <div id="search">
+      <input id="searchBox" type="text" placeholder="e.g. Health">
+    </div>
+    <div class="option">
       <button class='first active year_toggle' id='1314'>
         13-14 Budget
       </button>
@@ -81,6 +84,7 @@
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/d3/d3.js"></script>
+        <script src="../bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
