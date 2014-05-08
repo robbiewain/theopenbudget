@@ -49,7 +49,7 @@ module.exports = function (grunt) {
             },
             sass: {
                 files: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['sass:dist', 'autoprefixer']
+                tasks: ['sass:server', 'autoprefixer']
             },
             styles: {
                 files: ['<%= config.app %>/styles/{,*/}*.css'],
@@ -145,7 +145,10 @@ module.exports = function (grunt) {
         bowerInstall: {
             app: {
                 src: ['<%= config.app %>/index.html'],
-                exclude: ['bower_components/bootstrap/dist/js/bootstrap.js']
+                exclude: ['bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js']
+            },
+            sass: {
+                src: ['<%= config.app %>/styles/{,*/}*.{scss,sass}']
             }
         },
 
@@ -305,20 +308,37 @@ module.exports = function (grunt) {
         // Run some tasks in parallel to speed up build process
         concurrent: {
             server: [
-                'copy:styles'
-            ],
-            test: [
-                'copy:styles'
+                'sass:server',
+                'copy:styles',
+                'copy:data'
             ],
             dist: [
+                'sass',
                 'copy:styles',
+                'copy:data',
+                'copy:csv',
                 'imagemin',
                 'svgmin'
             ]
         },
 
+        // Compiles Sass to CSS and generates necessary files if requested
         sass: {
+            options: {
+                loadPath: [
+                    'bower_components'
+                ]
+            },
             dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= config.app %>/styles',
+                    src: ['*.scss'],
+                    dest: '.tmp/styles',
+                    ext: '.css'
+                }]
+            },
+            server: {
                 files: [{
                     expand: true,
                     cwd: '<%= config.app %>/styles',
@@ -340,14 +360,15 @@ module.exports = function (grunt) {
         }
     });
 
-
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
 
         grunt.task.run([
-            //'clean:server',
+            'clean:server',
+            'convert',
+            'processJSON',
             'concurrent:server',
             'autoprefixer',
             'connect:livereload',
@@ -362,7 +383,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
-        'sass',
         'useminPrepare',
         'concurrent:dist',
         'autoprefixer',
@@ -391,7 +411,6 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-convert');
     grunt.loadNpmTasks('grunt-rsync');
-    grunt.loadNpmTasks('grunt-contrib-sass');
 
     grunt.registerTask('processJSON', 'A task that creates a hierarchial json format.', function() {
         var src = '.tmp/data/budgetcsv.json';
@@ -564,9 +583,11 @@ module.exports = function (grunt) {
                                                         }
                                                     }
                                                 }
+                                                break;
                                             }
                                         }
                                     }
+                                    break;
                                 }
                             }
                         }
