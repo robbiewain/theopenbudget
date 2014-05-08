@@ -190,7 +190,7 @@ function highlight(budgetItem) {
 
 function initializeBreadcrumbTrail() {
     // Add the svg area.
-    var trail = d3.select('#breadcrumbs').append('svg:svg')
+    d3.select('#breadcrumbs').append('svg:svg')
         .attr('width', width)
         .attr('height', 50)
         .attr('id', 'trail');
@@ -222,7 +222,7 @@ function updateBreadcrumbs(nodeArray) {
 
     entering.append('svg:polygon')
       .attr('points', breadcrumbPoints)
-      .style('fill', function(d) { return color(d.y); });
+      .style('fill', function(d) { return d.color; });
 
     entering.append('svg:text')
       .attr('x', (b.w + b.t) / 2)
@@ -267,18 +267,22 @@ d3.json('/data/budget.json', function(json) {
                 .style('opacity', 0.6)
                 .style('stroke', '#fff')
                 .style('fill', function(d, i) {
+                    var c;
                     if (d.depth === 0) {
-                        return '#fff';
+                        c = '#fff';
+                    } else {
+                        c = color(i);
                     }
-                    return color(i);
+                    d.color = c;
+                    return c;
                 })
                 .each(stash)
                 .on('click', function(d) {
+                    updateBreadcrumbs(getAncestors(d));
                     window.location.hash = '#' + encodeURIComponent(d.name);
                     dive(d);
                 })
                 .on('mouseover', function(d) {
-                    updateBreadcrumbs(getAncestors(d));
                     highlight(d);
                     populateSidebar(d);
                 });

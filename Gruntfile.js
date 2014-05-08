@@ -423,7 +423,7 @@ module.exports = function (grunt) {
             var program = row.Program;
             var expenseType = row['Expense type'];
             var appropriationType = row['Appropriation type'];
-            var description = row.Description;
+            var description = row.Description || 'Other';
             var value1213 = parseFloat(row['2012-13']) || 0;
             var value1314 = parseFloat(row['2013-14']) || 0;
             var value1415 = parseFloat(row['2014-15']) || 0;
@@ -433,9 +433,9 @@ module.exports = function (grunt) {
             var sourceTable = row['Source table'];
             var url = row.URL;
 
-            function getProgram() {
+            function getDescription() {
                 return {
-                    name: program,
+                    name: description,
                     value1213: value1213,
                     value1314: value1314,
                     value1415: value1415,
@@ -443,10 +443,20 @@ module.exports = function (grunt) {
                     value1617: value1617,
                     expenseType: expenseType,
                     appropriationType: appropriationType,
-                    description: description,
                     sourceDocument: sourceDocument,
                     sourceTable: sourceTable,
                     url: url
+                };
+            }
+            function getProgram() {
+                return {
+                    name: program,
+                    alue1213: value1213,
+                    value1314: value1314,
+                    value1415: value1415,
+                    value1516: value1516,
+                    value1617: value1617,
+                    children: [getDescription()]
                 };
             }
             function getOutcome() {
@@ -532,10 +542,28 @@ module.exports = function (grunt) {
                                                 outcomes[k].value1516 += value1516;
                                                 outcomes[k].value1617 += value1617;
 
-                                                // Always add program even if its a duplicate
                                                 var programs = outcomes[k].children;
-                                                programs.push(getProgram());
-                                                break;
+                                                // Create program level if it doesnt exist
+                                                if (!lookup(programs, program)) {
+                                                    programs.push(getProgram());
+                                                } else {
+                                                    // Add to the cummulative program total
+                                                    for(var l = 0; l < programs.length; l++) {
+                                                        if(programs[l].name === program) {
+                                                            programs[l].value1213 += value1213;
+                                                            programs[l].value1314 += value1314;
+                                                            programs[l].value1415 += value1415;
+                                                            programs[l].value1516 += value1516;
+                                                            programs[l].value1617 += value1617;
+
+                                                            // Always add program even if its a duplicate
+                                                            var descriptions = programs[l].children;
+                                                            // Create Description
+                                                            descriptions.push(getDescription());
+                                                            break;
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
