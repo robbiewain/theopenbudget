@@ -409,20 +409,21 @@ module.exports = function (grunt) {
 
         function lookup(arr, name) {
             for(var i = 0, len = arr.length; i < len; i++) {
-                if( arr[i].name === name )
+                if(arr[i].name === name) {
                     return true;
+                }
             }
             return false;
         }
 
         csvData.forEach(function(row) {
-            var portfolio = row['Portfolio'];
+            var portfolio = row.Portfolio;
             var department = row['Department/Agency'];
-            var outcome = row['Outcome'];
-            var program = row['Program'];
+            var outcome = row.Outcome;
+            var program = row.Program;
             var expenseType = row['Expense type'];
             var appropriationType = row['Appropriation type'];
-            var description = row['Description'];
+            var description = row.Description;
             var value1213 = parseFloat(row['2012-13']) || 0;
             var value1314 = parseFloat(row['2013-14']) || 0;
             var value1415 = parseFloat(row['2014-15']) || 0;
@@ -430,7 +431,7 @@ module.exports = function (grunt) {
             var value1617 = parseFloat(row['2016-17']) || 0;
             var sourceDocument = row['Source document'];
             var sourceTable = row['Source table'];
-            var url = row['URL'];
+            var url = row.URL;
 
             function getProgram() {
                 return {
@@ -440,11 +441,11 @@ module.exports = function (grunt) {
                     value1415: value1415,
                     value1516: value1516,
                     value1617: value1617,
-                    expense_type: expenseType,
-                    appropriation_type: appropriationType,
+                    expenseType: expenseType,
+                    appropriationType: appropriationType,
                     description: description,
-                    source_document: sourceDocument,
-                    source_table: sourceTable,
+                    sourceDocument: sourceDocument,
+                    sourceTable: sourceTable,
                     url: url
                 };
             }
@@ -457,7 +458,7 @@ module.exports = function (grunt) {
                     value1516: value1516,
                     value1617: value1617,
                     children: [getProgram()]
-                }
+                };
             }
             function getDepartment() {
                 return {
@@ -468,7 +469,7 @@ module.exports = function (grunt) {
                     value1516: value1516,
                     value1617: value1617,
                     children: [getOutcome()]
-                }
+                };
             }
             function getPortfolio() {
                 return {
@@ -479,60 +480,60 @@ module.exports = function (grunt) {
                     value1516: value1516,
                     value1617: value1617,
                     children: [getDepartment()]
-                }
+                };
             }
 
             // Add to total
-            data['value1213'] += value1213;
-            data['value1314'] += value1314;
-            data['value1415'] += value1415;
-            data['value1516'] += value1516;
-            data['value1617'] += value1617;
+            data.value1213 += value1213;
+            data.value1314 += value1314;
+            data.value1415 += value1415;
+            data.value1516 += value1516;
+            data.value1617 += value1617;
 
-            var portfolios = data['children'];
+            var portfolios = data.children;
             // Create portfolio level if it doesnt exist
             if (!lookup(portfolios, portfolio)) {
                 portfolios.push(getPortfolio());
             } else {
                 // Add to the cummulative portfolio total
-                for(var i = 0, len = portfolios.length; i < len; i++) {
+                for(var i = 0; i < portfolios.length; i++) {
                     if(portfolios[i].name === portfolio) {
-                        portfolios[i]['value1213'] += value1213;
-                        portfolios[i]['value1314'] += value1314;
-                        portfolios[i]['value1415'] += value1415;
-                        portfolios[i]['value1516'] += value1516;
-                        portfolios[i]['value1617'] += value1617;
+                        portfolios[i].value1213 += value1213;
+                        portfolios[i].value1314 += value1314;
+                        portfolios[i].value1415 += value1415;
+                        portfolios[i].value1516 += value1516;
+                        portfolios[i].value1617 += value1617;
 
-                        var departments = portfolios[i]['children'];
+                        var departments = portfolios[i].children;
                         // Create department level if it doesnt exist
                         if (!lookup(departments, department)) {
                             departments.push(getDepartment());
                         } else {
                             // Add to the cummulative department total
-                            for(var i = 0, len = departments.length; i < len; i++) {
-                                if(departments[i].name === department) {
-                                    departments[i]['value1213'] += value1213;
-                                    departments[i]['value1314'] += value1314;
-                                    departments[i]['value1415'] += value1415;
-                                    departments[i]['value1516'] += value1516;
-                                    departments[i]['value1617'] += value1617;
+                            for(var j = 0; j < departments.length; j++) {
+                                if(departments[j].name === department) {
+                                    departments[j].value1213 += value1213;
+                                    departments[j].value1314 += value1314;
+                                    departments[j].value1415 += value1415;
+                                    departments[j].value1516 += value1516;
+                                    departments[j].value1617 += value1617;
 
-                                    var outcomes = departments[i]['children'];
+                                    var outcomes = departments[j].children;
                                     // Create outcome level if it doesnt exist
                                     if (!lookup(outcomes, outcome)) {
                                         outcomes.push(getOutcome());
                                     } else {
                                         // Add to the cummulative outcome total
-                                        for(var i = 0, len = outcomes.length; i < len; i++) {
-                                            if(outcomes[i].name === outcome) {
-                                                outcomes[i]['value1213'] += value1213;
-                                                outcomes[i]['value1314'] += value1314;
-                                                outcomes[i]['value1415'] += value1415;
-                                                outcomes[i]['value1516'] += value1516;
-                                                outcomes[i]['value1617'] += value1617;
+                                        for(var k = 0; k < outcomes.length; k++) {
+                                            if(outcomes[k].name === outcome) {
+                                                outcomes[k].value1213 += value1213;
+                                                outcomes[k].value1314 += value1314;
+                                                outcomes[k].value1415 += value1415;
+                                                outcomes[k].value1516 += value1516;
+                                                outcomes[k].value1617 += value1617;
 
                                                 // Always add program even if its a duplicate
-                                                var programs = outcomes[i]['children'];
+                                                var programs = outcomes[k].children;
                                                 programs.push(getProgram());
                                                 break;
                                             }
