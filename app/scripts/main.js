@@ -17,13 +17,9 @@ var b = {
 
 var currentYear = '1314';
 
-var totalSize = 0;
-
 var vis = d3.select('#chart').append('svg')
     .attr('width', width)
     .attr('height', height);
-//  .append('g')
-//  .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
 // group for pie
 var pieGroup = vis.append('svg:g')
@@ -198,10 +194,6 @@ function initializeBreadcrumbTrail() {
         .attr('width', width)
         .attr('height', 50)
         .attr('id', 'trail');
-    // Add the label at the end, for the percentage.
-    trail.append('svg:text')
-        .attr('id', 'endlabel')
-        .style('fill', '#000');
 }
 
 // Generate a string that describes the points of a breadcrumb polygon.
@@ -218,8 +210,8 @@ function breadcrumbPoints(d, i) {
     return points.join(' ');
 }
 
-// Update the breadcrumb trail to show the current sequence and percentage.
-function updateBreadcrumbs(nodeArray, percentageString) {
+// Update the breadcrumb trail to show the current sequence.
+function updateBreadcrumbs(nodeArray) {
     // Data join; key function combines name and depth (= position in sequence).
     var g = d3.select('#trail')
       .selectAll('g')
@@ -248,14 +240,6 @@ function updateBreadcrumbs(nodeArray, percentageString) {
 
     // Remove exiting nodes.
     g.exit().remove();
-
-    // Now move and update the percentage at the end.
-    d3.select('#trail').select('#endlabel')
-      .attr('x', (nodeArray.length + 0.5) * (b.w + b.s))
-      .attr('y', b.h / 2)
-      .attr('dy', '0.35em')
-      .attr('text-anchor', 'middle')
-      .text(percentageString);
 
     // Make the breadcrumb trail visible, if it's hidden.
     d3.select('#trail')
@@ -294,12 +278,7 @@ d3.json('/data/budget.json', function(json) {
                     dive(d);
                 })
                 .on('mouseover', function(d) {
-                    var percentage = (100 * d.value / totalSize).toPrecision(3);
-                    var percentageString = percentage + '%';
-                    if (percentage < 0.1) {
-                        percentageString = '< 0.1%';
-                    }
-                    updateBreadcrumbs(getAncestors(d), percentageString);
+                    updateBreadcrumbs(getAncestors(d));
                     highlight(d);
                     populateSidebar(d);
                 });
@@ -311,7 +290,6 @@ d3.json('/data/budget.json', function(json) {
     } else {
         populateSidebar([json][0]);
     }
-    totalSize = path.node().__data__.value;
 });
 
 $('#1213').click(function() {
