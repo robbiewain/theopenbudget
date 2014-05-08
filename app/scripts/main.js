@@ -13,7 +13,7 @@ var vis = d3.select('#chart').append('svg')
     .attr('width', width)
     .attr('height', height);
 //  .append('g')
-//    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+//  .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
 // group for pie
 var pieGroup = vis.append('svg:g')
@@ -84,7 +84,7 @@ function arcTween(a) {
 
 function isChild(child, name) {
     var parent = child.parent;
-    while (parent !== null) {
+    while (parent) {
         if (parent.name === name) {
             return true;
         }
@@ -97,11 +97,12 @@ function isChild(child, name) {
 
 function findElementFromName(name) {
     var element = null;
-    pieGroup.selectAll('path').data(partition.nodes).each(function(d){
-        if (d.name === name) {
-            element = d;
-        }
-    });
+    pieGroup.selectAll('path')
+        .data(partition.nodes).each(function(d) {
+            if (d.name === name) {
+                element = d;
+            }
+        });
     return element;
 }
 
