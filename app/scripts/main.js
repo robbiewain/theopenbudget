@@ -9,13 +9,13 @@ var width = 700,
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 var b = {
-    w: 140,
+    w: 133,
     h: 44,
-    s: 3,
+    s: 2,
     t: 10
 };
 
-var firstBreadCrumbWidth = 70;
+var firstBreadCrumbWidth = 50;
 
 var currentYear = '1314';
 
@@ -193,7 +193,7 @@ function highlight(budgetItem) {
 function initializeBreadcrumbTrail() {
     // Add the svg area.
     d3.select('#breadcrumbs').append('svg:svg')
-        .attr('width', width)
+        .attr('width', 740)
         .attr('height', 50)
         .attr('id', 'trail');
 }
@@ -214,6 +214,47 @@ function breadcrumbPoints(d, i) {
         points.push(b.t + ',' + (b.h / 2));
     }
     return points.join(' ');
+}
+
+function wrap(text, width) {
+    text.each(function() {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 1.1, // ems
+            y = text.attr('y'),
+            dy = parseFloat(text.attr('dy')),
+            tspan = text.text(null).append("tspan").attr("x", 15).attr("y", y);
+        var lines = [tspan];
+        while ((word = words.pop()) && (lines.length < 4)) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", 15).attr("y", y).text(word);
+                lines.push(tspan);
+            }
+        }
+        if (lines.length == 1) {
+            lines[0].attr("y", 21);
+        }
+        if (lines.length == 2) {
+            lines[0].attr("y", 15);
+            lines[1].attr("y", 31);
+        }
+        if (lines.length > 2) {
+            lines[0].attr("y", 9);
+            lines[1].attr("y", 25);
+            lines[2].attr("y", 37);
+        }
+        if (lines.length == 4){
+            lines[3].remove();
+        }
+    });
 }
 
 // Update the breadcrumb trail to show the current sequence.
@@ -253,7 +294,7 @@ function updateBreadcrumbs(nodeArray) {
         if (i === 0) {
             return '';
         } else {
-            return 'translate(' + ((i * (b.w + b.s)) - firstBreadCrumbWidth) + ', 0)';
+            return 'translate(' + (((i - 1) * (b.w + b.s)) + firstBreadCrumbWidth + b.s) + ', 0)';
         }
     });
 
@@ -264,46 +305,7 @@ function updateBreadcrumbs(nodeArray) {
     d3.select('#trail').style('visibility', '');
 }
 
-function wrap(text, width) {
-  text.each(function() {
-    var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 1.1, // ems
-        y = text.attr("y"),
-        dy = parseFloat(text.attr("dy")),
-        tspan = text.text(null).append("tspan").attr("x", 15).attr("y", y);
-    var lines = [tspan];
-    while ((word = words.pop()) && (lines.length < 4)) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if (tspan.node().getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text.append("tspan").attr("x", 15).attr("y", y).text(word);
-        lines.push(tspan);
-      }
-    }
-    if (lines.length == 1) {
-        lines[0].attr("y", 15);
-    }
-    if (lines.length == 2) {
-        lines[0].attr("y", 15);
-        lines[1].attr("y", 31);
-    }
-    if (lines.length > 2) {
-        lines[0].attr("y", 9);
-        lines[1].attr("y", 25);
-        lines[2].attr("y", 37);
-    }
-    if (lines.length == 4){
-        lines[3].remove();
-    }
-  });
-}
+
 
 // Given a node in a partition layout, return an array of all of its ancestor
 // nodes, highest first, but excluding the root.
@@ -390,21 +392,21 @@ $('.total_head, .total_body, .click_reset').click(function() {
 $('.click_reset').hide();
 
 var portfolios = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '/data/portfolios.json',
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    prefetch: '/data/portfolios.json',
 });
 
 var departments = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('d'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '/data/departments.json'
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('d'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    prefetch: '/data/departments.json'
 });
 
 var outcomes = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('o'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '/data/outcomes.json'
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('o'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    prefetch: '/data/outcomes.json'
 });
 
 var programs = new Bloodhound({
