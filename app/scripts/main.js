@@ -10,7 +10,7 @@ var width = 700,
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 var b = {
     w: 140,
-    h: 30,
+    h: 44,
     s: 3,
     t: 10
 };
@@ -225,13 +225,15 @@ function updateBreadcrumbs(nodeArray) {
       .style('fill', function(d) { return d.color; });
 
     entering.append('svg:text')
-      .attr('x', (b.w + b.t) / 2)
-      .attr('y', b.h / 2)
+      .attr('x', 0)
+      .attr('y', 10)
       .attr('dy', '0.35em')
-      .attr('text-anchor', 'middle')
+      .attr('text-anchor', 'left')
+      .attr('class', 'breadcrumb_text ')
       .text(function(d) {
-            return d.name.trunc(16);
-        });
+            return d.name.trunc(60);
+        })
+      .call(wrap, b.w - 20);
 
     // Set position for entering and updating nodes.
     g.attr('transform', function(d, i) {
@@ -244,6 +246,47 @@ function updateBreadcrumbs(nodeArray) {
     // Make the breadcrumb trail visible, if it's hidden.
     d3.select('#trail')
       .style('visibility', '');
+}
+
+function wrap(text, width) {
+  text.each(function() {
+    var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1, // ems
+        y = text.attr("y"),
+        dy = parseFloat(text.attr("dy")),
+        tspan = text.text(null).append("tspan").attr("x", 15).attr("y", y);
+    var lines = [tspan];
+    while ((word = words.pop()) && (lines.length < 4)) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", 15).attr("y", y).text(word);
+        lines.push(tspan);
+      }
+    }
+    if (lines.length == 1) {
+        lines[0].attr("y", 15);
+    }
+    if (lines.length == 2) {
+        lines[0].attr("y", 15);
+        lines[1].attr("y", 31);
+    }
+    if (lines.length > 2) {
+        lines[0].attr("y", 9);
+        lines[1].attr("y", 25);
+        lines[2].attr("y", 37);
+    }
+    if (lines.length == 4){
+        lines[3].remove();
+    }
+  });
 }
 
 // Given a node in a partition layout, return an array of all of its ancestor
