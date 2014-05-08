@@ -347,6 +347,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
+            'build',
             'clean:server',
             'concurrent:server',
             'autoprefixer',
