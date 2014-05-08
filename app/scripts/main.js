@@ -15,6 +15,8 @@ var b = {
     t: 10
 };
 
+var firstBreadCrumbWidth = 70;
+
 var currentYear = '1314';
 
 var vis = d3.select('#chart').append('svg')
@@ -198,11 +200,15 @@ function initializeBreadcrumbTrail() {
 
 // Generate a string that describes the points of a breadcrumb polygon.
 function breadcrumbPoints(d, i) {
+    var bcWidth = b.w;
+    if (i === 0) {
+        bcWidth = firstBreadCrumbWidth;
+    }
     var points = [];
     points.push('0,0');
-    points.push(b.w + ',0');
-    points.push(b.w + b.t + ',' + (b.h / 2));
-    points.push(b.w + ',' + b.h);
+    points.push(bcWidth + ',0');
+    points.push(bcWidth + b.t + ',' + (b.h / 2));
+    points.push(bcWidth + ',' + b.h);
     points.push('0,' + b.h);
     if (i > 0) { // Leftmost breadcrumb; don't include 6th vertex.
         points.push(b.t + ',' + (b.h / 2));
@@ -212,6 +218,13 @@ function breadcrumbPoints(d, i) {
 
 // Update the breadcrumb trail to show the current sequence.
 function updateBreadcrumbs(nodeArray) {
+    // Always add the total as the first breadcrumb
+    nodeArray.splice(0, 0, {
+        name: 'Total',
+        depth: 0,
+        color: '#333'
+    });
+
     // Data join; key function combines name and depth (= position in sequence).
     var g = d3.select('#trail')
       .selectAll('g')
@@ -229,7 +242,7 @@ function updateBreadcrumbs(nodeArray) {
       .attr('y', 10)
       .attr('dy', '0.35em')
       .attr('text-anchor', 'left')
-      .attr('class', 'breadcrumb_text ')
+      .attr('class', 'breadcrumb_text')
       .text(function(d) {
             return d.name.trunc(60);
         })
@@ -237,15 +250,18 @@ function updateBreadcrumbs(nodeArray) {
 
     // Set position for entering and updating nodes.
     g.attr('transform', function(d, i) {
-        return 'translate(' + i * (b.w + b.s) + ', 0)';
+        if (i === 0) {
+            return '';
+        } else {
+            return 'translate(' + ((i * (b.w + b.s)) - firstBreadCrumbWidth) + ', 0)';
+        }
     });
 
     // Remove exiting nodes.
     g.exit().remove();
 
     // Make the breadcrumb trail visible, if it's hidden.
-    d3.select('#trail')
-      .style('visibility', '');
+    d3.select('#trail').style('visibility', '');
 }
 
 function wrap(text, width) {
