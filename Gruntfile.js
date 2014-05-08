@@ -548,7 +548,7 @@ module.exports = function (grunt) {
             }
         });
 
-        grunt.file.write(dest, JSON.stringify(data, null, '\t'));
+        grunt.file.write(dest, JSON.stringify(data));
 
         grunt.log.ok('File ' + src + ' converted to ' + dest + ' OK'.green);
     });
