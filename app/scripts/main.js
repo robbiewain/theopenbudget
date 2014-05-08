@@ -290,7 +290,8 @@ function updateBreadcrumbs(nodeArray) {
       .call(wrap, b.w - 20);
 
     // Set position for entering and updating nodes.
-    g.attr('transform', function(d, i) {
+    g.transition().duration(500)
+      .attr('transform', function(d, i) {
         if (i === 0) {
             return '';
         } else {
