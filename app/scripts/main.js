@@ -393,33 +393,33 @@ $('.total_head, .total_body, .click_reset').click(function() {
 $('.click_reset').hide();
 
 var portfolios = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     prefetch: '/data/portfolios.json',
 });
 
 var departments = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('d'),
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     prefetch: '/data/departments.json'
 });
 
 var outcomes = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('o'),
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     prefetch: '/data/outcomes.json'
 });
 
 var programs = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('p'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '/data/programs.json'
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    prefetch: '/data/programs.json'
 });
 
 var descriptions = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('d'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '/data/descriptions.json'
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    prefetch: '/data/descriptions.json'
 });
 
 portfolios.initialize();
@@ -428,12 +428,13 @@ outcomes.initialize();
 programs.initialize();
 descriptions.initialize();
 
-$('#searchBox').typeahead({
+$('#searchBox').typeahead(
+    {
       highlight: true
     },
     {
       name: 'portfolios',
-      displayKey: 'p',
+      displayKey: 't',
       source: portfolios.ttAdapter(),
       templates: {
         header: '<h3 class="searchHeading">Portfolios</h3>'
@@ -441,7 +442,7 @@ $('#searchBox').typeahead({
     },
     {
       name: 'departments',
-      displayKey: 'd',
+      displayKey: 't',
       source: departments.ttAdapter(),
       templates: {
         header: '<h3 class="searchHeading">Departments</h3>'
@@ -449,7 +450,7 @@ $('#searchBox').typeahead({
     },
     {
       name: 'outcomes',
-      displayKey: 'o',
+      displayKey: 't',
       source: outcomes.ttAdapter(),
       templates: {
         header: '<h3 class="searchHeading">Outcomes</h3>'
@@ -457,7 +458,7 @@ $('#searchBox').typeahead({
     },
     {
       name: 'programs',
-      displayKey: 'p',
+      displayKey: 't',
       source: programs.ttAdapter(),
       templates: {
         header: '<h3 class="searchHeading">Programs</h3>'
@@ -465,9 +466,13 @@ $('#searchBox').typeahead({
     },
     {
       name: 'descriptions',
-      displayKey: 'd',
+      displayKey: 't',
       source: descriptions.ttAdapter(),
       templates: {
         header: '<h3 class="searchHeading">Descriptions</h3>'
       }
-    });
+    }
+);
+$('#searchBox').bind('typeahead:selected', function(obj, datum, name) {
+    dive(findElementFromName(datum.t));
+});

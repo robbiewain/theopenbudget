@@ -525,11 +525,11 @@ module.exports = function (grunt) {
             // Create portfolio level if it doesnt exist
             if (!lookup(portfolios, portfolio)) {
                 portfolios.push(getPortfolio());
-                portfolioNames.push({ p: portfolio });
-                departmentNames.push({ d: department });
-                outcomeNames.push({ o: outcome });
-                programNames.push({ p: program });
-                descriptionNames.push({ d: description });
+                portfolioNames.push({ t: portfolio });
+                departmentNames.push({ t: department });
+                outcomeNames.push({ t: outcome });
+                programNames.push({ t: program });
+                descriptionNames.push({ t: description });
             } else {
                 // Add to the cummulative portfolio total
                 for(var i = 0; i < portfolios.length; i++) {
@@ -544,10 +544,10 @@ module.exports = function (grunt) {
                         // Create department level if it doesnt exist
                         if (!lookup(departments, department)) {
                             departments.push(getDepartment());
-                            departmentNames.push({ d: department });
-                            outcomeNames.push({ o: outcome });
-                            programNames.push({ p: program });
-                            descriptionNames.push({ d: description });
+                            departmentNames.push({ t: department });
+                            outcomeNames.push({ t: outcome });
+                            programNames.push({ t: program });
+                            descriptionNames.push({ t: description });
                         } else {
                             // Add to the cummulative department total
                             for(var j = 0; j < departments.length; j++) {
@@ -562,8 +562,8 @@ module.exports = function (grunt) {
                                     // Create outcome level if it doesnt exist
                                     if (!lookup(outcomes, outcome)) {
                                         outcomes.push(getOutcome());
-                                        outcomeNames.push({ o: outcome });
-                                        programNames.push({ p: program });
+                                        outcomeNames.push({ t: outcome });
+                                        programNames.push({ t: program });
                                         descriptionNames.push({ d: description });
                                     } else {
                                         // Add to the cummulative outcome total
@@ -579,8 +579,8 @@ module.exports = function (grunt) {
                                                 // Create program level if it doesnt exist
                                                 if (!lookup(programs, program)) {
                                                     programs.push(getProgram());
-                                                    programNames.push({ p: program });
-                                                    descriptionNames.push({ d: description });
+                                                    programNames.push({ t: program });
+                                                    descriptionNames.push({ t: description });
                                                 } else {
                                                     // Add to the cummulative program total
                                                     for(var l = 0; l < programs.length; l++) {
@@ -595,7 +595,7 @@ module.exports = function (grunt) {
                                                             var descriptions = programs[l].children;
                                                             // Create Description
                                                             descriptions.push(getDescription());
-                                                            descriptionNames.push({ d: description });
+                                                            descriptionNames.push({ t: description });
                                                             break;
                                                         }
                                                     }
