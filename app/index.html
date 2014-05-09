@@ -21,40 +21,44 @@
       google.load('visualization', '1.0', {'packages':['corechart']});
       
       // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
-
+      google.setOnLoadCallback(initChart);
 
       // Callback that creates and populates a data table, 
       // instantiates the pie chart, passes in the data and
       // draws it.
-      function drawChart() {
+      function initChart() {
          // Create and populate the data table.
-          var data = google.visualization.arrayToDataTable([
+          window.trend_data = google.visualization.arrayToDataTable([
             ['Year', 'Cost'],
-            ['12-13',  1336060],
-            ['13-14',  1538156],
-            ['14-15',  1576579],
-            ['15-16',  1600652],
-            ['16-17',  1968113]
+            ['12-13', 0],
+            ['13-14',  0],
+            ['14-15',  0],
+            ['15-16',  0],
+            ['16-17',  0]
           ]);
-
-          // Create and draw the visualization.
-          new google.visualization.ColumnChart(document.getElementById('trend_chart_div')).
-              draw(data,
-                   {width:280, height:180,
-                    vAxis: {gridlines: {count: 0}},
+          
+          window.options = {width:280, height:180,
+                    vAxis: {gridlines: {count: 0}, minValue: 0},
                     hAxis: {title: ""},
-                    chartArea: {left: 10, right: 10, top: 10, bottom: 10, width: 260, height: 150},
+                    annotations: {fontSize: 24, color: '#E6550D', bold: true},
+                    chartArea: {left: 0, right: 0, top: 10, bottom: 10, width: 280, height: 150},
                     legend: {position: 'none'},
                     series: [{color: '#E6550D'}],
                     backgroundColor: '#fafafa',
                     animation: {
-                      duration: 1,
+                      duration: 500,
                       easing: 'inAndOut'
                     }
-                    }
-              );
+                    };
+          // Create and draw the visualization.
+          window.chart = new google.visualization.ColumnChart(document.getElementById('trend_chart_div'));
+          window.chart.draw(trend_data, options);
         }
+        
+        function redrawChart() {
+          window.chart.draw(trend_data, options);
+        }
+
         </script>
     </head>
     <body>
@@ -89,18 +93,8 @@
         <div class="clear"></div>
       </div>
       <div class="row">
-        <div class="label">13-14 Budget:</div>
-        <div id="value1314" class="value"></div>
-        <div class="clear"></div>
-      </div>
-      <div class="row">
         <div class="label">Cost per Australian person:</div>
         <div id="individual_taxpayer" class="value"></div>
-        <div class="clear"></div>
-      </div>
-      <div class="row">
-        <div class="label">Description:</div>
-        <div id="item_description" class="value description"></div>
         <div class="clear"></div>
       </div>
       <div class="row">

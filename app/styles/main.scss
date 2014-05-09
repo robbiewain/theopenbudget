@@ -61,6 +61,7 @@ body {
   -moz-border-radius: 8px;
   border-radius: 8px;
   outline: none;
+  color: #666;
 }
 
 #chart_container {
@@ -154,6 +155,10 @@ body {
         .value.description {
           font-size: 12px;
           line-height: 14px;
+        }
+        #item_name.value {
+          font-size: 16px;
+          line-height: 20px;
         }
         .value.source {
           font-size: 12px;

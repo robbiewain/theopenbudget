@@ -58,6 +58,16 @@ function roundToDP(number, decimalPlaces) {
     return Math.round(factor*number)/factor;
 }
 
+function formatLabels(number){
+    var label = "";
+    if (number > 999499) {
+        label = '$' + addCommas(roundToDP(number/1000000,1).toString()) + 'b';
+    } else {
+        label = '$' + addCommas(roundToDP(number/1000,0).toString()) + 'm';        
+    }
+    return label;
+}
+
 function commaSeparateNumber(val) {
     while (/(\d+)(\d{3})/.test(val.toString())){
         val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
@@ -68,6 +78,13 @@ function commaSeparateNumber(val) {
 function populateSidebar(budgetItem) {
     var name = (budgetItem.name === 'total' ? 'Total Government Expenditure' : budgetItem.name);
     $('#item_name').text(name);
+    window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
+            ['12-13',  roundToDP(budgetItem.value1213/1000,0),formatLabels(budgetItem.value1213)],
+            ['13-14',  roundToDP(budgetItem.value1314/1000,0),formatLabels(budgetItem.value1314)],
+            ['14-15',  roundToDP(budgetItem.value1415/1000,0),formatLabels(budgetItem.value1415)],
+            ['15-16',  roundToDP(budgetItem.value1516/1000,0),formatLabels(budgetItem.value1516)],
+            ['16-17',  roundToDP(budgetItem.value1617/1000,0),formatLabels(budgetItem.value1617)]]);
+    redrawChart();
     $('#value1213').text('$' + addCommas(roundToDP(budgetItem.value1213/1000,0).toString()) + ' million');
     $('#value1314').text('$' + addCommas(roundToDP(budgetItem.value1314/1000,0).toString()) + ' million');
     $('#value_change').text(roundToDP(100*budgetItem.value1314/budgetItem.value1213 - 100, 1).toString() + '%');
