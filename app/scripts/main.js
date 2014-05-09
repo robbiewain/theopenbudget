@@ -370,21 +370,21 @@ var centreGroup = vis.append('svg:g')
   .attr('class', 'centreGroup')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-centreGroup.append('svg:text')
-  .attr('class', 'total_head')
-  .attr('dy', -15)
-  .attr('text-anchor', 'middle') // text-align: right
-  .text('');
+//centreGroup.append('svg:text')
+//  .attr('class', 'total_head')
+//  .attr('dy', -15)
+//  .attr('text-anchor', 'middle') // text-align: right
+//  .text('');
 centreGroup.append('svg:text')
   .attr('class', 'total_body')
   .attr('dy', 15)
   .attr('text-anchor', 'middle') // text-align: right
   .text('');
-centreGroup.append('svg:text')
-  .attr('class', 'click_reset')
-  .attr('dy', 60)
-  .attr('text-anchor', 'middle') // text-align: right
-  .text('click to zoom out');
+//centreGroup.append('svg:text')
+//  .attr('class', 'click_reset')
+//  .attr('dy', 60)
+//  .attr('text-anchor', 'middle') // text-align: right
+//  .text('click to zoom out');
 
 $('.total_head, .total_body, .click_reset').click(function() {
     dive(findElementFromName('total'));
