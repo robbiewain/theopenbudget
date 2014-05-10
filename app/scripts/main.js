@@ -78,13 +78,12 @@ function commaSeparateNumber(val) {
 function populateSidebar(budgetItem) {
     var name = (budgetItem.name === 'total' ? 'Total Government Expenditure' : budgetItem.name);
     $('#item_name').text(name);
-    window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
-            ['12-13',  roundToDP(budgetItem.value1213/1000,0),formatLabels(budgetItem.value1213)],
-            ['13-14',  roundToDP(budgetItem.value1314/1000,0),formatLabels(budgetItem.value1314)],
-            ['14-15',  roundToDP(budgetItem.value1415/1000,0),formatLabels(budgetItem.value1415)],
-            ['15-16',  roundToDP(budgetItem.value1516/1000,0),formatLabels(budgetItem.value1516)],
-            ['16-17',  roundToDP(budgetItem.value1617/1000,0),formatLabels(budgetItem.value1617)]]);
-    redrawChart();
+    if(name.length > 100){
+        $('#item_name').addClass("small");
+    } else {
+        $('#item_name').removeClass("small");        
+    }
+    redrawChart(budgetItem);
     $('#value1213').text('$' + addCommas(roundToDP(budgetItem.value1213/1000,0).toString()) + ' million');
     $('#value1314').text('$' + addCommas(roundToDP(budgetItem.value1314/1000,0).toString()) + ' million');
     $('#value_change').text(roundToDP(100*budgetItem.value1314/budgetItem.value1213 - 100, 1).toString() + '%');
@@ -197,6 +196,12 @@ function dive(element) {
     }
 }
 
+function dive_and_update(element){
+    updateBreadcrumbs(getAncestors(element));
+    window.location.hash = '#' + encodeURIComponent(element.name);
+    dive(element);
+}
+
 function highlight(budgetItem) {
     d3.selectAll('path').style('opacity', function(d) {
         if (d.name !== budgetItem.name && !isChild(d, budgetItem.name)) {
@@ -293,7 +298,15 @@ function updateBreadcrumbs(nodeArray) {
 
     entering.append('svg:polygon')
       .attr('points', breadcrumbPoints)
-      .style('fill', function(d) { return d.color; });
+      .style('fill', function(d) { return d.color; })
+      .attr('class', 'breadcrumb')
+      .attr("expense_name", function(d){
+          return d.name;
+      });
+      
+    $(".breadcrumb").click(function(){
+        dive_and_update(findElementFromName($(this).attr("expense_name")));
+      });
 
     entering.append('svg:text')
       .attr('x', 0)
@@ -304,7 +317,13 @@ function updateBreadcrumbs(nodeArray) {
       .text(function(d) {
             return d.name.trunc(60);
         })
-      .call(wrap, b.w - 20);
+      .call(wrap, b.w - 20)
+      .attr('class', 'breadcrumb_text');
+    
+    $(".breadcrumb_text").click(function(){
+        $(this).prev().click();
+
+    });
 
     // Set position for entering and updating nodes.
     g.transition().duration(500)
@@ -357,9 +376,7 @@ d3.json('/data/budget.json', function(json) {
                 })
                 .each(stash)
                 .on('click', function(d) {
-                    updateBreadcrumbs(getAncestors(d));
-                    window.location.hash = '#' + encodeURIComponent(d.name);
-                    dive(d);
+                    dive_and_update(d);
                 })
                 .on('mouseover', function(d) {
                     highlight(d);
@@ -368,10 +385,17 @@ d3.json('/data/budget.json', function(json) {
     updatePie(currentYear);
     if (window.location.hash) {
         var currentElement = findElementFromName(decodeURIComponent(window.location.hash.replace('#', '')));
-        dive(currentElement);
-        populateSidebar(currentElement);
+        dive_and_update(currentElement);
     } else {
+        console.log("test");
+        window.raw_trend_data = [  ['Year', 'Cost', { role: 'annotation'}],
+            ['12-13',  roundToDP([json][0].value1213/1000,0),formatLabels([json][0].value1213)],
+            ['13-14',  roundToDP([json][0].value1314/1000,0),formatLabels([json][0].value1314)],
+            ['14-15',  roundToDP([json][0].value1415/1000,0),formatLabels([json][0].value1415)],
+            ['15-16',  roundToDP([json][0].value1516/1000,0),formatLabels([json][0].value1516)],
+            ['16-17',  roundToDP([json][0].value1617/1000,0),formatLabels([json][0].value1617)]];
         populateSidebar([json][0]);
+        console.log([json][0]);
     }
 });
 
@@ -381,6 +405,7 @@ $('#1213').click(function() {
 $('#1314').click(function() {
     updatePie('1314');
 });
+
 
 // group for centre text
 var centreGroup = vis.append('svg:g')
@@ -491,5 +516,7 @@ $('#searchBox').typeahead(
     }
 );
 $('#searchBox').bind('typeahead:selected', function(obj, datum, name) {
-    dive(findElementFromName(datum.t));
+  dive_and_update(findElementFromName(datum.t));
 });
+
+

@@ -23,24 +23,29 @@
       // Set a callback to run when the Google Visualization API is loaded.
       google.setOnLoadCallback(initChart);
 
-      // Callback that creates and populates a data table, 
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function initChart() {
-         // Create and populate the data table.
-          window.trend_data = google.visualization.arrayToDataTable([
+      var options;
+      
+      var raw_trend_data = [
             ['Year', 'Cost'],
             ['12-13', 0],
             ['13-14',  0],
             ['14-15',  0],
             ['15-16',  0],
             ['16-17',  0]
-          ]);
+          ];
+
+      // Callback that creates and populates a data table, 
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function initChart() {
+         // Create and populate the data table.
+          window.trend_data = google.visualization.arrayToDataTable(window.raw_trend_data);
           
           window.options = {width:280, height:180,
                     vAxis: {gridlines: {count: 0}, minValue: 0},
                     hAxis: {title: ""},
-                    annotations: {fontSize: 24, color: '#E6550D', bold: true},
+                    annotations: {fontSize: 30, color: '#E6550D'},
+                    bar: {groupWidth: "90%"},
                     chartArea: {left: 0, right: 0, top: 10, bottom: 10, width: 280, height: 150},
                     legend: {position: 'none'},
                     series: [{color: '#E6550D'}],
@@ -53,11 +58,20 @@
           // Create and draw the visualization.
           window.chart = new google.visualization.ColumnChart(document.getElementById('trend_chart_div'));
           window.chart.draw(trend_data, options);
+          redrawChart = function (budgetItem) {
+              window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
+            ['12-13',  roundToDP(budgetItem.value1213/1000,0),formatLabels(budgetItem.value1213)],
+            ['13-14',  roundToDP(budgetItem.value1314/1000,0),formatLabels(budgetItem.value1314)],
+            ['14-15',  roundToDP(budgetItem.value1415/1000,0),formatLabels(budgetItem.value1415)],
+            ['15-16',  roundToDP(budgetItem.value1516/1000,0),formatLabels(budgetItem.value1516)],
+            ['16-17',  roundToDP(budgetItem.value1617/1000,0),formatLabels(budgetItem.value1617)]]);
+            
+              window.chart.draw(trend_data, options);
+          }
         }
+        function redrawChart(){}
+
         
-        function redrawChart() {
-          window.chart.draw(trend_data, options);
-        }
 
         </script>
     </head>
@@ -84,7 +98,7 @@
     </div>
 
     <div class="item_detail">
-      <div class="row">
+      <div class="row item_name_container">
         <div id="item_name" class="value"></div>
         <div class="clear"></div>
       </div>
