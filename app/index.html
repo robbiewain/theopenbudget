@@ -38,7 +38,7 @@
       // instantiates the pie chart, passes in the data and
       // draws it.
       function initChart() {
-         // Create and populate the data table.
+         // Create and populate the trend chart.
           window.trend_data = google.visualization.arrayToDataTable(window.raw_trend_data);
           
           window.options = {width:280, height:180,
@@ -68,6 +68,31 @@
             
               window.chart.draw(trend_data, options);
           }
+          
+            // Create and populate the data table.
+          var share_total_data = google.visualization.arrayToDataTable([
+            ['Component', 'Cost'],
+            ['This item', 4],
+            ['Rest of budget', 96]
+          ]);
+          
+          var share_total_options = {
+            pieHole: 0.5,
+            width: 90,
+            height: 90,
+            pieSliceText: 'none',
+            chartArea: {left: 8, right: 8, top: 8, bottom: 8, width: 74, height: 74},
+            legend: {position: 'none'},
+            backgroundColor: '#fafafa',
+            slices:
+            {0: {color: "#E6550D"},
+             1: {color: "#ccc"}
+            }
+          }
+
+          // Create and draw the visualization.
+          new google.visualization.PieChart(document.getElementById('share_total')).
+              draw(share_total_data, share_total_options);
         }
         function redrawChart(){}
 
@@ -104,6 +129,21 @@
       </div>
       <div class="row">
         <div id="trend_chart_div" style="width:280; height:200"></div>
+        <div class="clear"></div>
+      </div>
+      <div class="row">
+        <div class="share_container">
+          <h4>% Budget</h4>
+          <div class="share_chart" id="share_total"></div>
+        </div>
+        <div class="share_container">
+          <h4>% Portfolio</h4>
+          <div class="share_chart" id="share_portfolio"></div>
+        </div>
+        <div class="share_container">
+          <h4>% Outcome</h4>
+          <div class="share_chart" id="share_outcome"></div>
+        </div>
         <div class="clear"></div>
       </div>
       <div class="row">
