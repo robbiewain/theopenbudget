@@ -63,7 +63,7 @@ function formatLabels(number){
     if (number > 999499) {
         label = '$' + addCommas(roundToDP(number/1000000,1).toString()) + 'b';
     } else {
-        label = '$' + addCommas(roundToDP(number/1000,0).toString()) + 'm';        
+        label = '$' + addCommas(roundToDP(number/1000,0).toString()) + 'm';
     }
     return label;
 }
@@ -81,7 +81,7 @@ function populateSidebar(budgetItem) {
     if(name.length > 100){
         $('#item_name').addClass("small");
     } else {
-        $('#item_name').removeClass("small");        
+        $('#item_name').removeClass("small");
     }
     redrawChart(budgetItem);
     $('#value1213').text('$' + addCommas(roundToDP(budgetItem.value1213/1000,0).toString()) + ' million');
@@ -303,7 +303,7 @@ function updateBreadcrumbs(nodeArray) {
       .attr("expense_name", function(d){
           return d.name;
       });
-      
+
     $(".breadcrumb").click(function(){
         dive_and_update(findElementFromName($(this).attr("expense_name")));
       });
@@ -319,7 +319,7 @@ function updateBreadcrumbs(nodeArray) {
         })
       .call(wrap, b.w - 20)
       .attr('class', 'breadcrumb_text');
-    
+
     $(".breadcrumb_text").click(function(){
         $(this).prev().click();
 
@@ -512,7 +512,7 @@ $('#searchBox').typeahead(
       displayKey: 't',
       source: descriptions.ttAdapter(),
       templates: {
-        header: '<h3 class="searchHeading">Descriptions</h3>'
+        header: '<h3 class="searchHeading">Line items</h3>'
       }
     }
 );
