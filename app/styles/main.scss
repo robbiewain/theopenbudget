@@ -159,6 +159,7 @@ body {
         .share_container {
           width: 90px;
           float:left;
+          position: relative;
           h4 {
             font-weight: normal;
             font-size: 10px;
@@ -167,6 +168,15 @@ body {
             color: #666;
             text-align: center;
             text-transform: uppercase;
+          }
+          .chart_label {
+            position: absolute;
+            width: 90px;            
+            left: 0;
+            top: 47px;
+            text-align:center;
+            color: #e6550d;
+            font-size: 12px;
           }
         }
         .share_chart{

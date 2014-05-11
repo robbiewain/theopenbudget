@@ -58,16 +58,8 @@
           // Create and draw the visualization.
           window.chart = new google.visualization.ColumnChart(document.getElementById('trend_chart_div'));
           window.chart.draw(trend_data, options);
-          redrawChart = function (budgetItem) {
-              window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
-            ['12-13',  roundToDP(budgetItem.value1213/1000,0),formatLabels(budgetItem.value1213)],
-            ['13-14',  roundToDP(budgetItem.value1314/1000,0),formatLabels(budgetItem.value1314)],
-            ['14-15',  roundToDP(budgetItem.value1415/1000,0),formatLabels(budgetItem.value1415)],
-            ['15-16',  roundToDP(budgetItem.value1516/1000,0),formatLabels(budgetItem.value1516)],
-            ['16-17',  roundToDP(budgetItem.value1617/1000,0),formatLabels(budgetItem.value1617)]]);
-            
-              window.chart.draw(trend_data, options);
-          }
+
+
           
             // Create and populate the data table.
           var share_total_data = google.visualization.arrayToDataTable([
@@ -75,8 +67,21 @@
             ['This item', 4],
             ['Rest of budget', 96]
           ]);
-          
-          var share_total_options = {
+
+          var share_portfolio_data = google.visualization.arrayToDataTable([
+            ['Component', 'Cost'],
+            ['This item', 10],
+            ['Rest of budget', 90]
+          ]);
+
+          var share_outcome_data = google.visualization.arrayToDataTable([
+            ['Component', 'Cost'],
+            ['This item', 60],
+            ['Rest of budget', 40]
+          ]);
+
+
+          var share_options = {
             pieHole: 0.5,
             width: 90,
             height: 90,
@@ -91,8 +96,86 @@
           }
 
           // Create and draw the visualization.
-          new google.visualization.PieChart(document.getElementById('share_total')).
-              draw(share_total_data, share_total_options);
+          window.share_total_chart = new google.visualization.PieChart(document.getElementById('share_total'));
+          window.share_total_chart.draw(share_total_data, share_options);
+
+          // Create and draw the visualization.
+          window.share_portfolio_chart = new google.visualization.PieChart(document.getElementById('share_portfolio'));
+          window.share_portfolio_chart.draw(share_portfolio_data, share_options);
+
+          // Create and draw the visualization.
+          window.share_outcome_chart = new google.visualization.PieChart(document.getElementById('share_outcome'));
+          window.share_outcome_chart.draw(share_outcome_data, share_options);
+
+          redrawChart = function (budgetItem) {
+            window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
+            ['12-13',  roundToDP(budgetItem.value1213/1000,0),formatLabels(budgetItem.value1213)],
+            ['13-14',  roundToDP(budgetItem.value1314/1000,0),formatLabels(budgetItem.value1314)],
+            ['14-15',  roundToDP(budgetItem.value1415/1000,0),formatLabels(budgetItem.value1415)],
+            ['15-16',  roundToDP(budgetItem.value1516/1000,0),formatLabels(budgetItem.value1516)],
+            ['16-17',  roundToDP(budgetItem.value1617/1000,0),formatLabels(budgetItem.value1617)]]);
+            window.chart.draw(trend_data, options);
+
+            parent = budgetItem;
+            var portfolio_total = 0;
+            var outcome_total = 0;
+            var budget_total = 0;
+            for (var i = budgetItem.depth; i > 0; i--) {
+              parent =  parent.parent;
+              if (parent.depth == 1){
+                portfolio_total = parent.value1314;
+              }
+              if (parent.depth == 3){
+                outcome_total = parent.value1314;
+              }
+              if (parent.depth == 0){
+                budget_total = parent.value1314;
+              }
+            }
+            console.log(budgetItem);
+
+          var share_total_data = google.visualization.arrayToDataTable([
+            ['Component', 'Cost'],
+            ['This item', budgetItem.value1314/1000],
+            ['Rest of budget', Math.max(0, budget_total/1000 - budgetItem.value1314/1000)]
+          ]);
+          window.share_total_chart.draw(share_total_data, share_options);
+          if(budgetItem.value1314 < budget_total){
+            $("#share_total_label").text(Math.round(budgetItem.value1314/budget_total * 100).toString() + "%");            
+          } else {
+            $("#share_total_label").text("100%");            
+
+          }
+
+          if (portfolio_total > 0){
+            $("#share_portfolio").css("opacity", 1);
+            var share_portfolio_data = google.visualization.arrayToDataTable([
+              ['Component', 'Cost'],
+              ['This item', budgetItem.value1314/1000],
+              ['Rest of budget', portfolio_total/1000 - budgetItem.value1314/1000]
+            ]);
+            window.share_portfolio_chart.draw(share_portfolio_data, share_options);
+            $("#share_portfolio_label").text(Math.round(budgetItem.value1314/portfolio_total * 100).toString() + "%");
+          } else {
+            $("#share_portfolio_label").text("");
+            $("#share_portfolio").css("opacity", 0.15);
+          }
+
+          if (outcome_total > 0){
+            $("#share_outcome").css("opacity", 1);
+            var share_outcome_data = google.visualization.arrayToDataTable([
+              ['Component', 'Cost'],
+              ['This item', budgetItem.value1314/1000],
+              ['Rest of budget', outcome_total/1000 - budgetItem.value1314/1000]
+            ]);
+            window.share_outcome_chart.draw(share_outcome_data, share_options);
+            $("#share_outcome_label").text(Math.round(budgetItem.value1314/outcome_total * 100).toString() + "%"); 
+          } else {
+            $("#share_outcome_label").text(""); 
+            $("#share_outcome").css("opacity", 0.15);
+          }
+
+          }
         }
         function redrawChart(){}
 
@@ -135,14 +218,17 @@
         <div class="share_container">
           <h4>% Budget</h4>
           <div class="share_chart" id="share_total"></div>
+          <div class="chart_label" id="share_total_label">XX%</div>
         </div>
         <div class="share_container">
           <h4>% Portfolio</h4>
           <div class="share_chart" id="share_portfolio"></div>
+          <div class="chart_label" id="share_portfolio_label">XX%</div>
         </div>
         <div class="share_container">
           <h4>% Outcome</h4>
           <div class="share_chart" id="share_outcome"></div>
+          <div class="chart_label" id="share_outcome_label">XX%</div>
         </div>
         <div class="clear"></div>
       </div>

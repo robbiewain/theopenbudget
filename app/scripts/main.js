@@ -203,7 +203,7 @@ function dive_and_update(element){
 }
 
 function highlight(budgetItem) {
-    d3.selectAll('path').style('opacity', function(d) {
+    d3.selectAll('path.pie_piece').style('opacity', function(d) {
         if (d.name !== budgetItem.name && !isChild(d, budgetItem.name)) {
             return 0.6;
         } else {
@@ -374,6 +374,7 @@ d3.json('/data/budget.json', function(json) {
                     d.color = c;
                     return c;
                 })
+                .attr("class", "pie_piece")
                 .each(stash)
                 .on('click', function(d) {
                     dive_and_update(d);
