@@ -21,8 +21,8 @@ body {
 
 .tt-dropdown-menu {
   background: #fff;
-  width: 316px;
-  max-height: 500px;
+  width: 318px;
+  max-height: 600px;
   overflow-y: auto;
   padding: 5px;
   padding-bottom: 10px;
@@ -58,7 +58,7 @@ body {
 
 
 #searchBox {
-  width: 300px;
+  width: 302px;
   height: 30px;
   padding: 8px 12px;
   font-size: 24px;
@@ -74,7 +74,7 @@ body {
 }
 
 #breadcrumbs {
-  padding: 15px 0;
+  padding: 15px 0 0;
   width: 700px;
   height: 70px;
 }
@@ -91,7 +91,7 @@ body {
   h1 {
     font-size: 32px;
     line-height: 34px;
-    margin: 10px 0px 0 0;
+    margin: 10px 0px 20px 0;
     color: #e6550d;
   }
   h2 {
@@ -108,10 +108,30 @@ body {
   }
   #chart {
     width: 700px;
-    float:left;
     padding: 20px;
     path {
       cursor:pointer;
+    }
+  }
+
+  #toggles {
+    text-align: center;
+    button.year_toggle {
+      height: 30px;
+      padding: 0 10px;
+      background: #fafafa;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    button.year_toggle:hover {
+      background:#fd8d3c;
+      border: 1px solid #e6550d;
+
+    }
+    button.year_toggle.active {
+      background: #e6550d;
+      border: 1px solid #e6550d;
+      color: #fff;
     }
   }
   #sidebar {
@@ -121,24 +141,11 @@ body {
     padding-top: 20px;
 //    background: #fafafa;
 
-    button.year_toggle {
-      height: 30px;
-      padding: 0 10px;
-      background: #fafafa;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
-    button.first {
-      margin-right: 10px;
-    }
-    button.year_toggle.active {
-      background: #fd8d3c;
-      border: 1px solid #e6550d;
-    }
+
     .item_detail {
       margin-top: 20px;
       background: #fafafa;
-      border-left: 1px solid #ccc;
+      border: 1px dashed #e6550d;
       padding: 20px;
       .item_name_container {
         width: 284px;
@@ -212,6 +219,7 @@ body {
     clear:both;
     color: #888;
     font-size: 11px;
+    padding-top: 20px;
   }
   .total_head {
     font-size: 11px;
