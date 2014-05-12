@@ -197,7 +197,7 @@ body {
           }
           .chart_label {
             position: absolute;
-            width: 90px;            
+            width: 90px;
             left: 0;
             top: 47px;
             text-align:center;
@@ -237,8 +237,21 @@ body {
   #footer {
     clear:both;
     color: #888;
-    font-size: 11px;
-    padding-top: 20px;
+    font-size: 12px;
+    line-height: 22px;
+    padding-top: 0 20px;
+    .description {
+      float:left;
+      width: 965px;
+    }
+    .twitter_share {
+      float:left;
+      width: 65px;
+    }
+    .facebook_share {
+      float:left;
+      width: 65px;
+    }
   }
   .total_head {
     font-size: 11px;
@@ -304,13 +317,13 @@ body {
     top: 100%;
     left: -1px;
     right: -1px;
- 
+
     /* Styles */
     background: white;
     transition: all 0.3s ease-out;
     list-style: none;
     border: 1px solid #e6550d;
- 
+
     /* Hiding */
     opacity: 0;
     pointer-events: none;
@@ -324,9 +337,9 @@ body {
     transition: all 0.3s ease-out;
 }
 
- 
+
 /* Hover state */
- 
+
 .wrapper-dropdown-2 .dropdown li:hover a {
   background: #fd8d3c;
 }
@@ -340,7 +353,7 @@ body {
     border-width: 0 6px 6px 6px;
     border-color: white transparent;
 }
- 
+
 .wrapper-dropdown-2.active .dropdown {
     opacity: 1;
     pointer-events: auto;

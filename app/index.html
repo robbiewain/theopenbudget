@@ -170,6 +170,14 @@
         </script>
     </head>
     <body>
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&appId=130606340384433&version=v2.0";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
 
 <div id="container">
   <div id="chart_container">
@@ -239,12 +247,15 @@
     </div>
   </div>
 
-  <div id="footer">TheOpenBudget is a cutting edge government transparency project, allowing you to quickly and easily explore where the Australian government spends your money.<br/>
+  <div id="footer"><div class="description">TheOpenBudget is a cutting edge government transparency project, allowing you to quickly and easily explore where the Australian government spends your money.<br/>
 
 
-    Want to use this data for your own purposes? Be our guest! Check out the <a href="data/budget.json">json export</a>, or <a href="data/budget.csv">download your own .csv</a>. Or get the code from <a href="https://github.com/robbiewain/theopenbudget">github</a>.<br/>TheOpenBudget was originally developed for GovHack 2012; built by <a href="https://twitter.com/robertdapice">Rob d'Apice</a> and <a href="https://twitter.com/robbiewain">Robbie Wain</a>. Questions, comments, complaints? <a href="https://twitter.com/theopenbudget">Hit us up on Twitter</a>.
-    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://theopenbudget.org" data-text="Check out this amazing interactive visualisation of the Budget!" data-via="theopenbudget">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    Want to use this data for your own purposes? Be our guest! Check out the <a href="data/budget.json">json export</a>, or <a href="data/budget.csv">download your own .csv</a>. Or get the code from <a href="https://github.com/robbiewain/theopenbudget">github</a>.<br/>TheOpenBudget was originally developed for GovHack 2012; built by <a href="https://twitter.com/robertdapice">Rob d'Apice</a> and <a href="https://twitter.com/robbiewain">Robbie Wain</a>. Questions, comments, complaints? <a href="https://twitter.com/theopenbudget">Hit us up on Twitter</a>.</div>
+    <div class="twitter_share"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://theopenbudget.org" data-text="Check out this amazing interactive visualisation of the Budget!" data-count="vertical" data-via="theopenbudget">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></div>
+  <div class="facebook_share">
+    <div class="fb-share-button" data-href="http://www.theopenbudget.org" data-type="box_count"></div>
+</div>
 
 </div>
         <!-- build:js scripts/vendor.js -->

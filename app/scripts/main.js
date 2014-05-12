@@ -176,7 +176,9 @@ function updatePie(year) {
     .duration(1500)
     .attrTween('d', arcTween);
     currentYear = year;
-
+    current_element = findElementFromID(0);
+    updateBreadcrumbs(getAncestors(current_element));
+    populateSidebar(current_element);
     updatePieAnnotation(findElementFromID(0));
 }
 
