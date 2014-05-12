@@ -466,10 +466,12 @@ d3.json('/data/budget.json', function(json) {
     }
 });
 
-$('.year_toggle').click(function() {
+$('.year_toggle').click(function(e) {
     updatePie($(this).attr("id"));
     $("#current_view_selection").text($(this).text());
     $("text.total_caption").text($(this).text() + ":");
+    e.preventDefault();
+
 });
 
 $('#showChangesBtn').click(function() {
