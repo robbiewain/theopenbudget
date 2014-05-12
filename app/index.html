@@ -16,15 +16,15 @@
         <!-- endbuild -->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-    
+
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart']});
-      
+
       // Set a callback to run when the Google Visualization API is loaded.
       google.setOnLoadCallback(initChart);
 
       var options;
-      
+
       var raw_trend_data = [
             ['Year', 'Cost'],
             ['12-13', 0],
@@ -34,13 +34,13 @@
             ['16-17',  0]
           ];
 
-      // Callback that creates and populates a data table, 
+      // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
       function initChart() {
          // Create and populate the trend chart.
           window.trend_data = google.visualization.arrayToDataTable(window.raw_trend_data);
-          
+
           window.options = {width:280, height:180,
                     vAxis: {gridlines: {count: 0}, minValue: 0},
                     hAxis: {title: ""},
@@ -60,7 +60,7 @@
           window.chart.draw(trend_data, options);
 
 
-          
+
             // Create and populate the data table.
           var share_total_data = google.visualization.arrayToDataTable([
             ['Component', 'Cost'],
@@ -141,9 +141,9 @@
           ]);
           window.share_total_chart.draw(share_total_data, share_options);
           if(budgetItem.value1314 < budget_total){
-            $("#share_total_label").text(Math.round(budgetItem.value1314/budget_total * 100).toString() + "%");            
+            $("#share_total_label").text(Math.round(budgetItem.value1314/budget_total * 100).toString() + "%");
           } else {
-            $("#share_total_label").text("100%");            
+            $("#share_total_label").text("100%");
 
           }
 
@@ -169,9 +169,9 @@
               ['Rest of budget', outcome_total/1000 - budgetItem.value1314/1000]
             ]);
             window.share_outcome_chart.draw(share_outcome_data, share_options);
-            $("#share_outcome_label").text(Math.round(budgetItem.value1314/outcome_total * 100).toString() + "%"); 
+            $("#share_outcome_label").text(Math.round(budgetItem.value1314/outcome_total * 100).toString() + "%");
           } else {
-            $("#share_outcome_label").text(""); 
+            $("#share_outcome_label").text("");
             $("#share_outcome").css("opacity", 0.15);
           }
 
@@ -179,7 +179,7 @@
         }
         function redrawChart(){}
 
-        
+
 
         </script>
     </head>
@@ -245,7 +245,7 @@
 
     </div>
   </div>
-  <div id="footer">Want to use this data for your own purposes? Be our guest! Check out the <a href="data/budget.json">json export</a>, or <a href="data/budget.csv">download your own .csv</a>. Or get the code from <a href="https://github.com/robbiewain/theopenbudget">github</a>.<br/>TheOpenBudget was originally developed for GovHack 2012, and built by a team from <a href="http://www.prosple.com.au">Prosple</a> and <a href="http://www.ozdocsonline.com.au">OzDocsOnline</a>. Questions, comments, complaints? <a href="https://twitter.com/theopenbudget">Hit us up on Twitter</a>.     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://theopenbudget.org" data-text="Check out this amazing interactive visualisation of the Budget!" data-via="theopenbudget">Tweet</a>
+  <div id="footer">Want to use this data for your own purposes? Be our guest! Check out the <a href="data/budget.json">json export</a>, or <a href="data/budget.csv">download your own .csv</a>. Or get the code from <a href="https://github.com/robbiewain/theopenbudget">github</a>.<br/>TheOpenBudget was originally developed for GovHack 2012, and built by <a href="https://twitter.com/robertdapice">Robert d'Apice</a> and <a href="https://twitter.com/robbiewain">Robbie Wain</a>. Questions, comments, complaints? <a href="https://twitter.com/theopenbudget">Hit us up on Twitter</a>.     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://theopenbudget.org" data-text="Check out this amazing interactive visualisation of the Budget!" data-via="theopenbudget">Tweet</a>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </div>
 </div>
