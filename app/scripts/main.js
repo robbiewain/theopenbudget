@@ -125,11 +125,11 @@ function isChild(child, name) {
     return false;
 }
 
-function findElementFromName(name) {
+function findElementFromName(pie_id) {
     var element = null;
     pieGroup.selectAll('path')
         .data(partition.nodes).each(function(d) {
-            if (d.n === name) {
+            if (d.pie_piece_counter === pie_id) {
                 element = d;
             }
         });
@@ -164,7 +164,7 @@ function updatePie(year) {
     .attrTween('d', arcTween);
     currentYear = year;
 
-    updatePieAnnotation(findElementFromName('total'));
+    updatePieAnnotation(findElementFromName(0));
 }
 
 function dive(element) {
@@ -196,7 +196,7 @@ function dive(element) {
 
 function dive_and_update(element){
     updateBreadcrumbs(getAncestors(element));
-    window.location.hash = '#' + encodeURIComponent(element.n);
+    window.location.hash = '#' + encodeURIComponent(element.pie_piece_counter);
     dive(element);
 }
 
@@ -300,12 +300,11 @@ function updateBreadcrumbs(nodeArray) {
       .attr('points', breadcrumbPoints)
       .style('fill', function(d) { return d.color; })
       .attr('class', 'breadcrumb')
-      .attr('expense_name', function(d){
-          return d.n;
-      });
-
-    $('.breadcrumb').click(function(){
-        dive_and_update(findElementFromName($(this).attr('expense_name')));
+      .attr('pie_id', function(d){
+          return d.pie_piece_counter;
+      })
+      .on("click",function(d){
+        dive_and_update(d);
       });
 
     entering.append('svg:text')
@@ -321,7 +320,8 @@ function updateBreadcrumbs(nodeArray) {
       .attr('class', 'breadcrumb_text');
 
     $('.breadcrumb_text').click(function(){
-        $(this).prev().click();
+        console.log(this);
+        $(this).prev().d3Click();
     });
 
     // Set position for entering and updating nodes.
@@ -354,7 +354,6 @@ function getAncestors(node) {
 
 d3.json('/data/budget.json', function(json) {
     initializeBreadcrumbTrail();
-    var pie_piece_counter = 1;
     path = pieGroup.data([json]).selectAll('path')
                 .data(partition.nodes).enter().append('path')
                 .attr('d', arc)
@@ -371,9 +370,8 @@ d3.json('/data/budget.json', function(json) {
                     d.color = c;
                     return c;
                 })
-                .attr("pie_piece_counter", function(d){
-                    pie_piece_counter ++;
-                    return pie_piece_counter;
+                .each(function(d, i){
+                    d.pie_piece_counter = i;
                 })
                 .attr("class", "pie_piece")
                 .each(stash)
@@ -386,7 +384,7 @@ d3.json('/data/budget.json', function(json) {
                 });
     updatePie(currentYear);
     if (window.location.hash) {
-        var currentElement = findElementFromName(decodeURIComponent(window.location.hash.replace('#', '')));
+        var currentElement = findElementFromName(parseInt(decodeURIComponent(window.location.hash.replace('#', ''))));
         dive_and_update(currentElement);
     } else {
         console.log("test");
@@ -420,7 +418,7 @@ centreGroup.append('svg:text')
   .text('');
 
 $('.total_head, .total_body, .click_reset').click(function() {
-    dive(findElementFromName('total'));
+    dive(findElementFromName(0));
 });
 
 $('.click_reset').hide();
@@ -509,3 +507,12 @@ $('#searchBox').typeahead(
 $('#searchBox').bind('typeahead:selected', function(obj, datum, name) {
   dive_and_update(findElementFromName(datum.t));
 });
+
+jQuery.fn.d3Click = function () {
+  this.each(function (i, e) {
+    var evt = document.createEvent("MouseEvents");
+    evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+    e.dispatchEvent(evt);
+  });
+};
