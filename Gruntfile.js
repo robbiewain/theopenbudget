@@ -355,7 +355,7 @@ module.exports = function (grunt) {
                 explicitArray: false,
             },
             csv2json: {
-                src: '<%= config.app %>/data/budget_13actual_dummy.csv',
+                src: '<%= config.app %>/data/budget.csv',
                 dest: '.tmp/data/budgetcsv.json'
             }
         }
