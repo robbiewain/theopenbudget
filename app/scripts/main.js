@@ -17,7 +17,7 @@ var b = {
 
 var firstBreadCrumbWidth = 50;
 
-var currentYear = '1314';
+var currentYear = '1415';
 
 var vis = d3.select('#chart').append('svg')
     .attr('width', width)
@@ -84,8 +84,8 @@ function populateSidebar(budgetItem) {
         $('#item_name').removeClass("small");
     }
     redrawChart(budgetItem);
-    $('#value1213').text('$' + addCommas(roundToDP(budgetItem.v1/1000,0).toString()) + ' million');
-    $('#value1314').text('$' + addCommas(roundToDP(budgetItem.v2/1000,0).toString()) + ' million');
+    $('#value1314').text('$' + addCommas(roundToDP(budgetItem.v1/1000,0).toString()) + ' million');
+    $('#value1415').text('$' + addCommas(roundToDP(budgetItem.v2/1000,0).toString()) + ' million');
     $('#value_change').text(roundToDP(100*budgetItem.v2/budgetItem.v1 - 100, 1).toString() + '%');
     $('#individual_taxpayer').text('$' + addCommas(roundToDP(budgetItem.v2*1000/23022031, 2).toString()));
     if (!budgetItem.children) {
@@ -151,10 +151,10 @@ function updatePie(year) {
             return d.value;
         }
         else {
-            if (year === '1314' ) {
+            if (year === '1415' ) {
                 return d.v2;
             }
-            else if (year === '1213') {
+            else if (year === '1314') {
                 return d.v1;
             }
         }
@@ -170,7 +170,6 @@ function updatePie(year) {
 function dive(element) {
     // reset all values if click total
     if (element.n === 'total') {
-        $('.click_reset').hide();
         updatePie(currentYear);
     }
     else {
@@ -178,10 +177,10 @@ function dive(element) {
             if (d.n !== element.n && !isChild(d, element.n)) {
                 return 0;
             } else {
-                if (currentYear === '1314' ) {
+                if (currentYear === '1415' ) {
                     return d.v2;
                 }
-                else if (currentYear === '1213') {
+                else if (currentYear === '1314') {
                     return d.v1;
                 }
             }
@@ -190,7 +189,6 @@ function dive(element) {
         .duration(1500)
         .attrTween('d', arcTween);
         updatePieAnnotation(element);
-        $('.click_reset').show();
     }
 }
 
@@ -400,11 +398,11 @@ d3.json('/data/budget.json', function(json) {
     }
 });
 
-$('#1213').click(function() {
-    updatePie('1213');
-});
 $('#1314').click(function() {
     updatePie('1314');
+});
+$('#1415').click(function() {
+    updatePie('1415');
 });
 
 // group for centre text
@@ -418,11 +416,9 @@ centreGroup.append('svg:text')
   .attr('text-anchor', 'middle') // text-align: right
   .text('');
 
-$('.total_head, .total_body, .click_reset').click(function() {
+$('.total_body').click(function() {
     dive(findElementFromName(0));
 });
-
-$('.click_reset').hide();
 
 var portfolios = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),

@@ -27,11 +27,11 @@
 
       var raw_trend_data = [
             ['Year', 'Cost'],
-            ['12-13', 0],
-            ['13-14',  0],
+            ['13-14', 0],
             ['14-15',  0],
             ['15-16',  0],
-            ['16-17',  0]
+            ['16-17',  0],
+            ['17-18',  0]
           ];
 
       // Callback that creates and populates a data table,
@@ -110,11 +110,11 @@
 
           redrawChart = function (budgetItem) {
             window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
-            ['12-13',  roundToDP(budgetItem.v1/1000,0),formatLabels(budgetItem.v1)],
-            ['13-14',  roundToDP(budgetItem.v2/1000,0),formatLabels(budgetItem.v2)],
-            ['14-15',  roundToDP(budgetItem.v3/1000,0),formatLabels(budgetItem.v3)],
-            ['15-16',  roundToDP(budgetItem.v4/1000,0),formatLabels(budgetItem.v4)],
-            ['16-17',  roundToDP(budgetItem.v5/1000,0),formatLabels(budgetItem.v5)]]);
+            ['13-14',  roundToDP(budgetItem.v1/1000,0),formatLabels(budgetItem.v1)],
+            ['14-15',  roundToDP(budgetItem.v2/1000,0),formatLabels(budgetItem.v2)],
+            ['15-16',  roundToDP(budgetItem.v3/1000,0),formatLabels(budgetItem.v3)],
+            ['16-17',  roundToDP(budgetItem.v4/1000,0),formatLabels(budgetItem.v4)],
+            ['17-18',  roundToDP(budgetItem.v5/1000,0),formatLabels(budgetItem.v5)]]);
             window.chart.draw(trend_data, options);
 
             parent = budgetItem;
@@ -189,11 +189,11 @@
           <div id="breadcrumbs"></div>
           <div id="chart"></div>
           <div id="toggles" class="option">
-      <button class='first active year_toggle' id='1314'>
-        13-14 Budget
+      <button class='first active year_toggle' id='1415'>
+        14-15 Budget
       </button>
-      <button class='last year_toggle' id='1213'>
-        12-13 Actual
+      <button class='last year_toggle' id='1314'>
+        13-14 Actual
       </button>
       </div>
   </div>

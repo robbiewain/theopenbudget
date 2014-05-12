@@ -444,11 +444,11 @@ module.exports = function (grunt) {
             var expenseType = row['Expense type'];
             var appropriationType = row['Appropriation type'];
             var description = row.Description;
-            var value1213 = parseFloat(row['2012-13']) || 0;
-            var value1314 = parseFloat(row['2013-14']) || 0;
-            var value1415 = parseFloat(row['2014-15']) || 0;
-            var value1516 = parseFloat(row['2015-16']) || 0;
-            var value1617 = parseFloat(row['2016-17']) || 0;
+            var value1 = parseFloat(row['2013-14']) || 0;
+            var value2 = parseFloat(row['2014-15']) || 0;
+            var value3 = parseFloat(row['2015-16']) || 0;
+            var value4 = parseFloat(row['2016-17']) || 0;
+            var value5 = parseFloat(row['2017-18']) || 0;
             var sourceDocument = row['Source document'];
             var sourceTable = row['Source table'];
             var url = row.URL;
@@ -461,11 +461,11 @@ module.exports = function (grunt) {
             function getDescription() {
                 return {
                     n: description,
-                    v1: value1213,
-                    v2: value1314,
-                    v3: value1415,
-                    v4: value1516,
-                    v5: value1617,
+                    v1: value1,
+                    v2: value2,
+                    v3: value3,
+                    v4: value4,
+                    v5: value5,
                     sd: sourceDocument,
                     st: sourceTable,
                     u: url,
@@ -475,11 +475,11 @@ module.exports = function (grunt) {
             function getProgram() {
                 var p = {
                     n: program,
-                    v1: value1213,
-                    v2: value1314,
-                    v3: value1415,
-                    v4: value1516,
-                    v5: value1617
+                    v1: value1,
+                    v2: value2,
+                    v3: value3,
+                    v4: value4,
+                    v5: value5
                 };
                 if (description) {
                     p.children = [getDescription()]
@@ -494,11 +494,11 @@ module.exports = function (grunt) {
             function getOutcome() {
                 var o = {
                     n: outcome,
-                    v1: value1213,
-                    v2: value1314,
-                    v3: value1415,
-                    v4: value1516,
-                    v5: value1617
+                    v1: value1,
+                    v2: value2,
+                    v3: value3,
+                    v4: value4,
+                    v5: value5
                 };
                 if (program) {
                     o.children = [getProgram()];
@@ -513,11 +513,11 @@ module.exports = function (grunt) {
             function getDepartment() {
                 var d = {
                     n: department,
-                    v1: value1213,
-                    v2: value1314,
-                    v3: value1415,
-                    v4: value1516,
-                    v5: value1617
+                    v1: value1,
+                    v2: value2,
+                    v3: value3,
+                    v4: value4,
+                    v5: value5
                 };
                 if (outcome) {
                     d.children = [getOutcome()];
@@ -532,11 +532,11 @@ module.exports = function (grunt) {
             function getPortfolio() {
                 var p = {
                     n: portfolio,
-                    v1: value1213,
-                    v2: value1314,
-                    v3: value1415,
-                    v4: value1516,
-                    v5: value1617
+                    v1: value1,
+                    v2: value2,
+                    v3: value3,
+                    v4: value4,
+                    v5: value5
                 };
                 if (department) {
                     p.children = [getDepartment()];
@@ -550,11 +550,11 @@ module.exports = function (grunt) {
             }
 
             // Add to total
-            data.v1 += value1213;
-            data.v2 += value1314;
-            data.v3 += value1415;
-            data.v4 += value1516;
-            data.v5 += value1617;
+            data.v1 += value1;
+            data.v2 += value2;
+            data.v3 += value3;
+            data.v4 += value4;
+            data.v5 += value5;
 
             var portfolios = data.children;
             // Create portfolio level if it doesnt exist
@@ -569,11 +569,11 @@ module.exports = function (grunt) {
                 // Add to the cummulative portfolio total
                 for(var i = 0; i < portfolios.length; i++) {
                     if(portfolios[i].n === portfolio) {
-                        portfolios[i].v1 += value1213;
-                        portfolios[i].v2 += value1314;
-                        portfolios[i].v3 += value1415;
-                        portfolios[i].v4 += value1516;
-                        portfolios[i].v5 += value1617;
+                        portfolios[i].v1 += value1;
+                        portfolios[i].v2 += value2;
+                        portfolios[i].v3 += value3;
+                        portfolios[i].v4 += value4;
+                        portfolios[i].v5 += value5;
 
                         var departments = portfolios[i].children;
                         // Create department level if it doesnt exist
@@ -587,11 +587,11 @@ module.exports = function (grunt) {
                             // Add to the cummulative department total
                             for(var j = 0; j < departments.length; j++) {
                                 if(departments[j].n === department) {
-                                    departments[j].v1 += value1213;
-                                    departments[j].v2 += value1314;
-                                    departments[j].v3 += value1415;
-                                    departments[j].v4 += value1516;
-                                    departments[j].v5 += value1617;
+                                    departments[j].v1 += value1;
+                                    departments[j].v2 += value2;
+                                    departments[j].v3 += value3;
+                                    departments[j].v4 += value4;
+                                    departments[j].v5 += value5;
 
                                     var outcomes = departments[j].children;
                                     // Create outcome level if it doesnt exist
@@ -604,11 +604,11 @@ module.exports = function (grunt) {
                                         // Add to the cummulative outcome total
                                         for(var k = 0; k < outcomes.length; k++) {
                                             if(outcomes[k].n === outcome) {
-                                                outcomes[k].v1 += value1213;
-                                                outcomes[k].v2 += value1314;
-                                                outcomes[k].v3 += value1415;
-                                                outcomes[k].v4 += value1516;
-                                                outcomes[k].v5 += value1617;
+                                                outcomes[k].v1 += value1;
+                                                outcomes[k].v2 += value2;
+                                                outcomes[k].v3 += value3;
+                                                outcomes[k].v4 += value4;
+                                                outcomes[k].v5 += value5;
 
                                                 var programs = outcomes[k].children;
                                                 // Create program level if it doesnt exist
@@ -620,11 +620,11 @@ module.exports = function (grunt) {
                                                     // Add to the cummulative program total
                                                     for(var l = 0; l < programs.length; l++) {
                                                         if(programs[l].n === program) {
-                                                            programs[l].v1 += value1213;
-                                                            programs[l].v2 += value1314;
-                                                            programs[l].v3 += value1415;
-                                                            programs[l].v4 += value1516;
-                                                            programs[l].v5 += value1617;
+                                                            programs[l].v1 += value1;
+                                                            programs[l].v2 += value2;
+                                                            programs[l].v3 += value3;
+                                                            programs[l].v4 += value4;
+                                                            programs[l].v5 += value5;
 
                                                             // Always add program even if its a duplicate
                                                             var descriptions = programs[l].children;
@@ -649,7 +649,7 @@ module.exports = function (grunt) {
             }
         });
 
-        grunt.file.write('.tmp/data/budget.json', JSON.stringify(data));
+        grunt.file.write('.tmp/data/budget.json', JSON.stringify(data, null,' '));
         grunt.file.write('.tmp/data/portfolios.json', JSON.stringify(portfolioNames));
         grunt.log.ok(portfolioNames.length + ' portfolios');
         grunt.file.write('.tmp/data/departments.json', JSON.stringify(departmentNames));
