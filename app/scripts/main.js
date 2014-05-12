@@ -279,13 +279,15 @@ function wrap(text, width) {
 
 // Update the breadcrumb trail to show the current sequence.
 function updateBreadcrumbs(nodeArray) {
-    // Always add the total as the first breadcrumb
-    nodeArray.splice(0, 0, {
-        n: 'Total',
-        depth: 0,
-        color: '#333'
-    });
-
+    // Show Total as the 'home breadcrumb' unless there are no items to display
+    if (nodeArray.length > 0)
+    {
+        nodeArray.splice(0, 0, {
+            n: 'Total',
+            depth: 0,
+            color: '#333'
+        });
+    }
     // Data join; key function combines name and depth (= position in sequence).
     var g = d3.select('#trail')
       .selectAll('g')
@@ -298,12 +300,12 @@ function updateBreadcrumbs(nodeArray) {
       .attr('points', breadcrumbPoints)
       .style('fill', function(d) { return d.color; })
       .attr('class', 'breadcrumb')
-      .attr("expense_name", function(d){
+      .attr('expense_name', function(d){
           return d.n;
       });
 
-    $(".breadcrumb").click(function(){
-        dive_and_update(findElementFromName($(this).attr("expense_name")));
+    $('.breadcrumb').click(function(){
+        dive_and_update(findElementFromName($(this).attr('expense_name')));
       });
 
     entering.append('svg:text')
@@ -318,14 +320,12 @@ function updateBreadcrumbs(nodeArray) {
       .call(wrap, b.w - 20)
       .attr('class', 'breadcrumb_text');
 
-    $(".breadcrumb_text").click(function(){
+    $('.breadcrumb_text').click(function(){
         $(this).prev().click();
-
     });
 
     // Set position for entering and updating nodes.
-    g.transition().duration(500)
-      .attr('transform', function(d, i) {
+    g.attr('transform', function(d, i) {
         if (i === 0) {
             return '';
         } else {
