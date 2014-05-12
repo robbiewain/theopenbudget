@@ -354,6 +354,7 @@ function getAncestors(node) {
 
 d3.json('/data/budget.json', function(json) {
     initializeBreadcrumbTrail();
+    var pie_piece_counter = 1;
     path = pieGroup.data([json]).selectAll('path')
                 .data(partition.nodes).enter().append('path')
                 .attr('d', arc)
@@ -369,6 +370,10 @@ d3.json('/data/budget.json', function(json) {
                     }
                     d.color = c;
                     return c;
+                })
+                .attr("pie_piece_counter", function(d){
+                    pie_piece_counter ++;
+                    return pie_piece_counter;
                 })
                 .attr("class", "pie_piece")
                 .each(stash)
