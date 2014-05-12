@@ -116,10 +116,10 @@ function arcTween(a) {
     };
 }
 
-function isChild(child, name) {
+function isChild(child, id) {
     var parent = child.parent;
     while (parent) {
-        if (parent.n === name) {
+        if (parent.i === id) {
             return true;
         }
         else {
@@ -178,7 +178,7 @@ function dive(element) {
     }
     else {
         path.data(partition.value(function(d) {
-            if (d.n !== element.n && !isChild(d, element.n)) {
+            if (d.i !== element.i && !isChild(d, element.i)) {
                 return 0;
             } else {
                 if (currentYear === '1415' ) {
@@ -205,7 +205,7 @@ function dive_and_update(element){
 
 function highlight(budgetItem) {
     d3.selectAll('path.pie_piece').style('opacity', function(d) {
-        if (d.n !== budgetItem.n && !isChild(d, budgetItem.n)) {
+        if (d.i !== budgetItem.i && !isChild(d, budgetItem.i)) {
             return 0.6;
         } else {
             return 1;
