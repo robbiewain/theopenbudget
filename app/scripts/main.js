@@ -198,6 +198,7 @@ function dive_and_update(element){
     updateBreadcrumbs(getAncestors(element));
     window.location.hash = '#' + encodeURIComponent(element.pie_piece_counter);
     dive(element);
+    populateSidebar(element);
 }
 
 function highlight(budgetItem) {
