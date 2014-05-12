@@ -2,8 +2,8 @@
 
 'use strict';
 
-var greens = ["#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
-var reds = ["#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
+var greens = ["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
+var reds = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
 
 var current_element, hover_out_timer;
 var width = 700,
@@ -116,10 +116,10 @@ function arcTween(a) {
     };
 }
 
-function isChild(child, name) {
+function isChild(child, id) {
     var parent = child.parent;
     while (parent) {
-        if (parent.n === name) {
+        if (parent.i === id) {
             return true;
         }
         else {
@@ -187,7 +187,7 @@ function dive(element) {
     }
     else {
         path.data(partition.value(function(d) {
-            if (d.n !== element.n && !isChild(d, element.n)) {
+            if (d.i !== element.i && !isChild(d, element.i)) {
                 return 0;
             } else {
                 if (currentYear === '1415' ) {
@@ -215,7 +215,7 @@ function dive_and_update(element){
 
 function highlight(budgetItem) {
     d3.selectAll('path.pie_piece').style('opacity', function(d) {
-        if (d.n !== budgetItem.n && !isChild(d, budgetItem.n)) {
+        if (d.i !== budgetItem.i && !isChild(d, budgetItem.i)) {
             return 0.6;
         } else {
             return 1;
@@ -378,36 +378,40 @@ function updateColors(d) {
         if (showChanges) {
             var pc = 0;
             pc = (d.v2 - d.v1) / d.v2;
-            if (pc < -25) {
+            if (pc < -0.64) {
+                c = reds[8];
+            } else if (pc < -0.32) {
+                c = reds[7];
+            } else if (pc < -0.16) {
                 c = reds[6];
-            } else if (pc < -12.5) {
+            } else if (pc < -0.08) {
                 c = reds[5];
-            } else if (pc < -6.25) {
+            } else if (pc < -0.04) {
                 c = reds[4];
-            } else if (pc < -3.125) {
+            } else if (pc < -0.02) {
                 c = reds[3];
-            } else if (pc < -1.5625) {
+            } else if (pc < -0.01) {
                 c = reds[2];
-            } else if (pc < -0.78125) {
-                c = reds[1];
             } else if (pc < 0) {
-                c = reds[0];
+                c = reds[1];
             } else if (pc === 0) {
                 c = "777";
-            } else if (pc < 0.78125) {
-                c = greens[0];
-            } else if (pc < 1.5625) {
+            } else if (pc < 0.01) {
                 c = greens[1];
-            } else if (pc < 3.125) {
+            } else if (pc < 0.02) {
                 c = greens[2];
-            } else if (pc < 6.25) {
+            } else if (pc < 0.04) {
                 c = greens[3];
-            } else if (pc < 12.5) {
+            } else if (pc < 0.08) {
                 c = greens[4];
-            } else if (pc < 25) {
+            } else if (pc < 0.16) {
                 c = greens[5];
-            } else {
+            } else if (pc < 0.32) {
                 c = greens[6];
+            } else if (pc < 0.64) {
+                c = greens[7];
+            } else {
+                c = greens[8];
             }
         } else {
             c = color(d.i);

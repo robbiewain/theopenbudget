@@ -437,7 +437,8 @@ module.exports = function (grunt) {
             return false;
         }
 
-        csvData.forEach(function(row, id) {
+        var id = 1;
+        csvData.forEach(function(row) {
             var portfolio = row.Portfolio;
             var department = row['Department/Agency'];
             var outcome = row.Outcome;
@@ -453,7 +454,6 @@ module.exports = function (grunt) {
             var sourceDocument = row['Source document'];
             var sourceTable = row['Source table'];
             var url = row.URL;
-            id ++;
 
             // If description is blank use expense/appropriation type
             if (program && !description) {
@@ -461,7 +461,7 @@ module.exports = function (grunt) {
             }
 
             function getDescription() {
-                return {
+                var d = {
                     i: id,
                     n: description,
                     v1: value1,
@@ -474,6 +474,8 @@ module.exports = function (grunt) {
                     u: url,
                     children: []
                 };
+                id++;
+                return d;
             }
             function getProgram() {
                 var p = {
@@ -485,6 +487,7 @@ module.exports = function (grunt) {
                     v4: value4,
                     v5: value5
                 };
+                id++;
                 if (description) {
                     p.children = [getDescription()]
                 } else {
@@ -505,6 +508,7 @@ module.exports = function (grunt) {
                     v4: value4,
                     v5: value5
                 };
+                id++;
                 if (program) {
                     o.children = [getProgram()];
                 } else {
@@ -525,6 +529,7 @@ module.exports = function (grunt) {
                     v4: value4,
                     v5: value5
                 };
+                id++;
                 if (outcome) {
                     d.children = [getOutcome()];
                 } else {
@@ -545,6 +550,7 @@ module.exports = function (grunt) {
                     v4: value4,
                     v5: value5
                 };
+                id++;
                 if (department) {
                     p.children = [getDepartment()];
                 } else {
@@ -566,12 +572,13 @@ module.exports = function (grunt) {
             var portfolios = data.children;
             // Create portfolio level if it doesnt exist
             if (!lookup(portfolios, portfolio)) {
-                portfolios.push(getPortfolio());
-                portfolioNames.push({ t: portfolio, i: id });
-                departmentNames.push({ t: department, i: id });
-                outcomeNames.push({ t: outcome, i: id });
-                programNames.push({ t: program, i: id });
-                descriptionNames.push({ t: description, i: id });
+                var p = getPortfolio();
+                portfolios.push(p);
+                portfolioNames.push({ t: portfolio, i: p.i });
+                departmentNames.push({ t: department, i: p.children[0].i });
+                outcomeNames.push({ t: outcome, i: p.children[0].children[0].i });
+                programNames.push({ t: program, i: p.children[0].children[0].children[0].i });
+                descriptionNames.push({ t: description, i: p.children[0].children[0].children[0].children[0].i });
             } else {
                 // Add to the cummulative portfolio total
                 for(var i = 0; i < portfolios.length; i++) {
@@ -585,11 +592,12 @@ module.exports = function (grunt) {
                         var departments = portfolios[i].children;
                         // Create department level if it doesnt exist
                         if (!lookup(departments, department)) {
-                            departments.push(getDepartment());
-                            departmentNames.push({ t: department, i: id });
-                            outcomeNames.push({ t: outcome, i: id });
-                            programNames.push({ t: program, i: id });
-                            descriptionNames.push({ t: description, i: id });
+                            var d = getDepartment();
+                            departments.push(d);
+                            departmentNames.push({ t: department, i: d.i });
+                            outcomeNames.push({ t: outcome, i: d.children[0].i });
+                            programNames.push({ t: program, i: d.children[0].children[0].i });
+                            descriptionNames.push({ t: description, i: d.children[0].children[0].children[0].i });
                         } else {
                             // Add to the cummulative department total
                             for(var j = 0; j < departments.length; j++) {
@@ -603,10 +611,11 @@ module.exports = function (grunt) {
                                     var outcomes = departments[j].children;
                                     // Create outcome level if it doesnt exist
                                     if (!lookup(outcomes, outcome)) {
-                                        outcomes.push(getOutcome());
-                                        outcomeNames.push({ t: outcome, i: id });
-                                        programNames.push({ t: program, i: id });
-                                        descriptionNames.push({ t: description, i: id });
+                                        var o = getOutcome();
+                                        outcomes.push(o);
+                                        outcomeNames.push({ t: outcome, i: o.i });
+                                        programNames.push({ t: program, i: o.children[0].i });
+                                        descriptionNames.push({ t: description, i: o.children[0].children[0].i });
                                     } else {
                                         // Add to the cummulative outcome total
                                         for(var k = 0; k < outcomes.length; k++) {
@@ -620,9 +629,10 @@ module.exports = function (grunt) {
                                                 var programs = outcomes[k].children;
                                                 // Create program level if it doesnt exist
                                                 if (!lookup(programs, program)) {
-                                                    programs.push(getProgram());
-                                                    programNames.push({ t: program, i: id });
-                                                    descriptionNames.push({ t: description, i: id });
+                                                    var p = getProgram();
+                                                    programs.push(p);
+                                                    programNames.push({ t: program, i: p.i });
+                                                    descriptionNames.push({ t: description, i: p.children[0].i });
                                                 } else {
                                                     // Add to the cummulative program total
                                                     for(var l = 0; l < programs.length; l++) {
@@ -636,8 +646,9 @@ module.exports = function (grunt) {
                                                             // Always add program even if its a duplicate
                                                             var descriptions = programs[l].children;
                                                             // Create Description
-                                                            descriptions.push(getDescription());
-                                                            descriptionNames.push({ t: description, i: id });
+                                                            var d = getDescription();
+                                                            descriptions.push(d);
+                                                            descriptionNames.push({ t: description, i: d.i });
                                                             break;
                                                         }
                                                     }
@@ -656,16 +667,16 @@ module.exports = function (grunt) {
             }
         });
 
-        grunt.file.write('.tmp/data/budget.json', JSON.stringify(data));
-        grunt.file.write('.tmp/data/portfolios.json', JSON.stringify(portfolioNames));
+        grunt.file.write('.tmp/data/budget.json', JSON.stringify(data,null,' '));
+        grunt.file.write('.tmp/data/portfolios.json', JSON.stringify(portfolioNames,null,' '));
         grunt.log.ok(portfolioNames.length + ' portfolios');
-        grunt.file.write('.tmp/data/departments.json', JSON.stringify(departmentNames));
+        grunt.file.write('.tmp/data/departments.json', JSON.stringify(departmentNames,null,' '));
         grunt.log.ok(departmentNames.length + ' departments');
-        grunt.file.write('.tmp/data/outcomes.json', JSON.stringify(outcomeNames));
+        grunt.file.write('.tmp/data/outcomes.json', JSON.stringify(outcomeNames,null,' '));
         grunt.log.ok(outcomeNames.length + ' outcomes');
-        grunt.file.write('.tmp/data/programs.json', JSON.stringify(programNames));
+        grunt.file.write('.tmp/data/programs.json', JSON.stringify(programNames,null, ' '));
         grunt.log.ok(programNames.length + ' programs');
-        grunt.file.write('.tmp/data/descriptions.json', JSON.stringify(descriptionNames));
+        grunt.file.write('.tmp/data/descriptions.json', JSON.stringify(descriptionNames,null, ' '));
         grunt.log.ok(descriptionNames.length + ' descriptions');
 
         grunt.log.ok('Json files created ' + 'OK'.green);
