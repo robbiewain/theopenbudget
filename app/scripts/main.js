@@ -196,6 +196,15 @@ function dive(element) {
                 else if (currentYear === '1314') {
                     return d.v1;
                 }
+                else if (currentYear === '1516') {
+                    return d.v3;
+                }
+                else if (currentYear === '1617') {
+                    return d.v4;
+                }
+                else if (currentYear === '1718') {
+                    return d.v5;
+                }
             }
         }))
         .transition()
@@ -594,7 +603,7 @@ DropDown.prototype = {
         obj.dd.on('click', function(event){
             $(this).toggleClass('active');
             event.stopPropagation();
-        }); 
+        });
     }
 }
 

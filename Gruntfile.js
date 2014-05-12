@@ -355,7 +355,7 @@ module.exports = function (grunt) {
                 explicitArray: false,
             },
             csv2json: {
-                src: '<%= config.app %>/data/budget.csv',
+                src: '<%= config.app %>/data/budget_14sample.csv',
                 dest: '.tmp/data/budgetcsv.json'
             }
         }
@@ -667,16 +667,16 @@ module.exports = function (grunt) {
             }
         });
 
-        grunt.file.write('.tmp/data/budget.json', JSON.stringify(data,null,' '));
-        grunt.file.write('.tmp/data/portfolios.json', JSON.stringify(portfolioNames,null,' '));
+        grunt.file.write('.tmp/data/budget.json', JSON.stringify(data));
+        grunt.file.write('.tmp/data/portfolios.json', JSON.stringify(portfolioNames));
         grunt.log.ok(portfolioNames.length + ' portfolios');
-        grunt.file.write('.tmp/data/departments.json', JSON.stringify(departmentNames,null,' '));
+        grunt.file.write('.tmp/data/departments.json', JSON.stringify(departmentNames));
         grunt.log.ok(departmentNames.length + ' departments');
-        grunt.file.write('.tmp/data/outcomes.json', JSON.stringify(outcomeNames,null,' '));
+        grunt.file.write('.tmp/data/outcomes.json', JSON.stringify(outcomeNames));
         grunt.log.ok(outcomeNames.length + ' outcomes');
-        grunt.file.write('.tmp/data/programs.json', JSON.stringify(programNames,null, ' '));
+        grunt.file.write('.tmp/data/programs.json', JSON.stringify(programNames));
         grunt.log.ok(programNames.length + ' programs');
-        grunt.file.write('.tmp/data/descriptions.json', JSON.stringify(descriptionNames,null, ' '));
+        grunt.file.write('.tmp/data/descriptions.json', JSON.stringify(descriptionNames));
         grunt.log.ok(descriptionNames.length + ' descriptions');
 
         grunt.log.ok('Json files created ' + 'OK'.green);
