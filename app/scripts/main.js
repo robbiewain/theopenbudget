@@ -450,19 +450,15 @@ d3.json('/data/budget.json', function(json) {
         var currentElement = findElementFromID(parseInt(decodeURIComponent(window.location.hash.replace('#', ''))));
         dive_and_update(currentElement);
     } else {
-        window.raw_trend_data = [  ['Year', 'Cost', { role: 'annotation'}],
-            ['12-13',  roundToDP([json][0].v1/1000,0),formatLabels([json][0].v1)],
-            ['13-14',  roundToDP([json][0].v2/1000,0),formatLabels([json][0].v2)],
-            ['14-15',  roundToDP([json][0].v3/1000,0),formatLabels([json][0].v3)],
-            ['15-16',  roundToDP([json][0].v4/1000,0),formatLabels([json][0].v4)],
-            ['16-17',  roundToDP([json][0].v5/1000,0),formatLabels([json][0].v5)]];
-        populateSidebar([json][0]);
+        current_element = findElementFromID(0);
+        populateSidebar(current_element);
     }
 });
 
 $('.year_toggle').click(function() {
     updatePie($(this).attr("id"));
     $("#current_view_selection").text($(this).text());
+    $("text.total_caption").text($(this).text() + ":");
 });
 
 $('#showChangesBtn').click(function() {
@@ -481,6 +477,13 @@ centreGroup.append('svg:text')
   .attr('dy', 15)
   .attr('text-anchor', 'middle') // text-align: right
   .text('');
+
+centreGroup.append('svg:text')
+  .attr('class', 'total_caption')
+  .attr('dy', -15)
+  .attr('text-anchor', 'middle') // text-align: right
+  .text('14-15 BUDGET:');
+
 
 $('.total_body').click(function() {
     dive(findElementFromID(0));

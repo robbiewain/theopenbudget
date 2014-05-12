@@ -62,24 +62,6 @@
           window.chart = new google.visualization.ColumnChart(document.getElementById('trend_chart_div'));
           window.chart.draw(trend_data, options);
 
-          // Create and populate the data table.
-          var share_total_data = google.visualization.arrayToDataTable([
-            ['Component', 'Cost'],
-            ['This item', 4],
-            ['Rest of budget', 96]
-          ]);
-
-          var share_portfolio_data = google.visualization.arrayToDataTable([
-            ['Component', 'Cost'],
-            ['This item', 10],
-            ['Rest of budget', 90]
-          ]);
-
-          var share_outcome_data = google.visualization.arrayToDataTable([
-            ['Component', 'Cost'],
-            ['This item', 60],
-            ['Rest of budget', 40]
-          ]);
 
           var share_options = {
             pieHole: 0.5,
@@ -104,15 +86,13 @@
 
           // Create and draw the visualization.
           window.share_total_chart = new google.visualization.PieChart(document.getElementById('share_total'));
-          window.share_total_chart.draw(share_total_data, share_options);
 
           // Create and draw the visualization.
           window.share_portfolio_chart = new google.visualization.PieChart(document.getElementById('share_portfolio'));
-          window.share_portfolio_chart.draw(share_portfolio_data, share_options);
 
           // Create and draw the visualization.
           window.share_outcome_chart = new google.visualization.PieChart(document.getElementById('share_outcome'));
-          window.share_outcome_chart.draw(share_outcome_data, share_options);
+
 
           redrawChart = function (budgetItem) {
             window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
@@ -182,6 +162,8 @@
           }
 
           }
+
+          redrawChart(current_element);
         }
         function redrawChart(){}
 
