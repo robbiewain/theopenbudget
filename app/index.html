@@ -16,15 +16,15 @@
         <!-- endbuild -->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-    
+
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart']});
-      
+
       // Set a callback to run when the Google Visualization API is loaded.
       google.setOnLoadCallback(initChart);
 
       var options;
-      
+
       var raw_trend_data = [
             ['Year', 'Cost'],
             ['12-13', 0],
@@ -34,13 +34,13 @@
             ['16-17',  0]
           ];
 
-      // Callback that creates and populates a data table, 
+      // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
       function initChart() {
          // Create and populate the trend chart.
           window.trend_data = google.visualization.arrayToDataTable(window.raw_trend_data);
-          
+
           window.options = {width:280, height:180,
                     vAxis: {gridlines: {count: 0}, minValue: 0},
                     hAxis: {title: ""},
@@ -59,9 +59,7 @@
           window.chart = new google.visualization.ColumnChart(document.getElementById('trend_chart_div'));
           window.chart.draw(trend_data, options);
 
-
-          
-            // Create and populate the data table.
+          // Create and populate the data table.
           var share_total_data = google.visualization.arrayToDataTable([
             ['Component', 'Cost'],
             ['This item', 4],
@@ -80,7 +78,6 @@
             ['Rest of budget', 40]
           ]);
 
-
           var share_options = {
             pieHole: 0.5,
             width: 90,
@@ -90,12 +87,18 @@
             legend: {position: 'none'},
             backgroundColor: '#fafafa',
             slices:
+<<<<<<< HEAD
             {0: {color: "#E6550D"},
              1: {color: "#ccc"}
             },
             animation: {
               duration: 500,
               easing: 'inAndOut'
+=======
+            {
+              0: {color: "#E6550D"},
+              1: {color: "#ccc"}
+>>>>>>> 13d2542f5666c7fa3c586d6e6299bc7a40eb295e
             }
           }
 
@@ -113,11 +116,11 @@
 
           redrawChart = function (budgetItem) {
             window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
-            ['12-13',  roundToDP(budgetItem.value1213/1000,0),formatLabels(budgetItem.value1213)],
-            ['13-14',  roundToDP(budgetItem.value1314/1000,0),formatLabels(budgetItem.value1314)],
-            ['14-15',  roundToDP(budgetItem.value1415/1000,0),formatLabels(budgetItem.value1415)],
-            ['15-16',  roundToDP(budgetItem.value1516/1000,0),formatLabels(budgetItem.value1516)],
-            ['16-17',  roundToDP(budgetItem.value1617/1000,0),formatLabels(budgetItem.value1617)]]);
+            ['12-13',  roundToDP(budgetItem.v1/1000,0),formatLabels(budgetItem.v1)],
+            ['13-14',  roundToDP(budgetItem.v2/1000,0),formatLabels(budgetItem.v2)],
+            ['14-15',  roundToDP(budgetItem.v3/1000,0),formatLabels(budgetItem.v3)],
+            ['15-16',  roundToDP(budgetItem.v4/1000,0),formatLabels(budgetItem.v4)],
+            ['16-17',  roundToDP(budgetItem.v5/1000,0),formatLabels(budgetItem.v5)]]);
             window.chart.draw(trend_data, options);
 
             parent = budgetItem;
@@ -127,27 +130,27 @@
             for (var i = budgetItem.depth; i > 0; i--) {
               parent =  parent.parent;
               if (parent.depth == 1){
-                portfolio_total = parent.value1314;
+                portfolio_total = parent.v1;
               }
               if (parent.depth == 3){
-                outcome_total = parent.value1314;
+                outcome_total = parent.v1;
               }
               if (parent.depth == 0){
-                budget_total = parent.value1314;
+                budget_total = parent.v1;
               }
             }
             console.log(budgetItem);
 
           var share_total_data = google.visualization.arrayToDataTable([
             ['Component', 'Cost'],
-            ['This item', budgetItem.value1314/1000],
-            ['Rest of budget', Math.max(0, budget_total/1000 - budgetItem.value1314/1000)]
+            ['This item', budgetItem.v1/1000],
+            ['Rest of budget', Math.max(0, budget_total/1000 - budgetItem.v1/1000)]
           ]);
           window.share_total_chart.draw(share_total_data, share_options);
-          if(budgetItem.value1314 < budget_total){
-            $("#share_total_label").text(Math.round(budgetItem.value1314/budget_total * 100).toString() + "%");            
+          if(budgetItem.v1 < budget_total){
+            $("#share_total_label").text(Math.round(budgetItem.v1/budget_total * 100).toString() + "%");
           } else {
-            $("#share_total_label").text("100%");            
+            $("#share_total_label").text("100%");
 
           }
 
@@ -155,11 +158,11 @@
             $("#share_portfolio").css("opacity", 1);
             var share_portfolio_data = google.visualization.arrayToDataTable([
               ['Component', 'Cost'],
-              ['This item', budgetItem.value1314/1000],
-              ['Rest of budget', portfolio_total/1000 - budgetItem.value1314/1000]
+              ['This item', budgetItem.v1/1000],
+              ['Rest of budget', portfolio_total/1000 - budgetItem.v1/1000]
             ]);
             window.share_portfolio_chart.draw(share_portfolio_data, share_options);
-            $("#share_portfolio_label").text(Math.round(budgetItem.value1314/portfolio_total * 100).toString() + "%");
+            $("#share_portfolio_label").text(Math.round(budgetItem.v1/portfolio_total * 100).toString() + "%");
           } else {
             $("#share_portfolio_label").text("");
             $("#share_portfolio").css("opacity", 0.15);
@@ -169,21 +172,19 @@
             $("#share_outcome").css("opacity", 1);
             var share_outcome_data = google.visualization.arrayToDataTable([
               ['Component', 'Cost'],
-              ['This item', budgetItem.value1314/1000],
-              ['Rest of budget', outcome_total/1000 - budgetItem.value1314/1000]
+              ['This item', budgetItem.v1/1000],
+              ['Rest of budget', outcome_total/1000 - budgetItem.v1/1000]
             ]);
             window.share_outcome_chart.draw(share_outcome_data, share_options);
-            $("#share_outcome_label").text(Math.round(budgetItem.value1314/outcome_total * 100).toString() + "%"); 
+            $("#share_outcome_label").text(Math.round(budgetItem.v1/outcome_total * 100).toString() + "%");
           } else {
-            $("#share_outcome_label").text(""); 
+            $("#share_outcome_label").text("");
             $("#share_outcome").css("opacity", 0.15);
           }
 
           }
         }
         function redrawChart(){}
-
-        
 
         </script>
     </head>

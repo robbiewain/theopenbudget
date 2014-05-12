@@ -76,7 +76,7 @@ function commaSeparateNumber(val) {
 }
 
 function populateSidebar(budgetItem) {
-    var name = (budgetItem.name === 'total' ? 'Total Government Expenditure' : budgetItem.name);
+    var name = (budgetItem.n === 'total' ? 'Total Government Expenditure' : budgetItem.n);
     $('#item_name').text(name);
     if(name.length > 100){
         $('#item_name').addClass("small");
@@ -84,15 +84,13 @@ function populateSidebar(budgetItem) {
         $('#item_name').removeClass("small");
     }
     redrawChart(budgetItem);
-    $('#value1213').text('$' + addCommas(roundToDP(budgetItem.value1213/1000,0).toString()) + ' million');
-    $('#value1314').text('$' + addCommas(roundToDP(budgetItem.value1314/1000,0).toString()) + ' million');
-    $('#value_change').text(roundToDP(100*budgetItem.value1314/budgetItem.value1213 - 100, 1).toString() + '%');
-    $('#individual_taxpayer').text('$' + addCommas(roundToDP(budgetItem.value1314*1000/23022031, 2).toString()));
+    $('#value1213').text('$' + addCommas(roundToDP(budgetItem.v1/1000,0).toString()) + ' million');
+    $('#value1314').text('$' + addCommas(roundToDP(budgetItem.v2/1000,0).toString()) + ' million');
+    $('#value_change').text(roundToDP(100*budgetItem.v2/budgetItem.v1 - 100, 1).toString() + '%');
+    $('#individual_taxpayer').text('$' + addCommas(roundToDP(budgetItem.v2*1000/23022031, 2).toString()));
     if (!budgetItem.children) {
-        $('#item_description').text(budgetItem.description || 'None available');
-        $('#item_source').html('<a href="' + budgetItem.url + '">' + budgetItem.sourceDocument + ' (' + budgetItem.sourceTable + ')</a>');
+        $('#item_source').html('<a href="' + budgetItem.u + '">' + budgetItem.sd + ' (' + budgetItem.st + ')</a>');
     } else {
-        $('#item_description').text(budgetItem.description || 'None available');
         $('#item_source').html('');
     }
 }
@@ -117,7 +115,7 @@ function arcTween(a) {
 function isChild(child, name) {
     var parent = child.parent;
     while (parent) {
-        if (parent.name === name) {
+        if (parent.n === name) {
             return true;
         }
         else {
@@ -131,7 +129,7 @@ function findElementFromName(name) {
     var element = null;
     pieGroup.selectAll('path')
         .data(partition.nodes).each(function(d) {
-            if (d.name === name) {
+            if (d.n === name) {
                 element = d;
             }
         });
@@ -140,24 +138,24 @@ function findElementFromName(name) {
 
 function updatePieAnnotation(element) {
     $('.total_body').text('$' + commaSeparateNumber((element.value/1000).toFixed(0)) + 'm');
-    if (element.name === 'total') {
+    if (element.n === 'total') {
         $('.total_head').text('Total Government Expenditure');
     } else {
-        $('.total_head').text(element.name);
+        $('.total_head').text(element.n);
     }
 }
 
 function updatePie(year) {
     path.data(partition.value(function(d) {
-        if (d.value1314 === null){
+        if (d.v2 === null){
             return d.value;
         }
         else {
             if (year === '1314' ) {
-                return d.value1314;
+                return d.v2;
             }
             else if (year === '1213') {
-                return d.value1213;
+                return d.v1;
             }
         }
     }))
@@ -171,20 +169,20 @@ function updatePie(year) {
 
 function dive(element) {
     // reset all values if click total
-    if (element.name === 'total') {
+    if (element.n === 'total') {
         $('.click_reset').hide();
         updatePie(currentYear);
     }
     else {
         path.data(partition.value(function(d) {
-            if (d.name !== element.name && !isChild(d, element.name)) {
+            if (d.n !== element.n && !isChild(d, element.n)) {
                 return 0;
             } else {
                 if (currentYear === '1314' ) {
-                    return d.value1314;
+                    return d.v2;
                 }
                 else if (currentYear === '1213') {
-                    return d.value1213;
+                    return d.v1;
                 }
             }
         }))
@@ -198,13 +196,13 @@ function dive(element) {
 
 function dive_and_update(element){
     updateBreadcrumbs(getAncestors(element));
-    window.location.hash = '#' + encodeURIComponent(element.name);
+    window.location.hash = '#' + encodeURIComponent(element.n);
     dive(element);
 }
 
 function highlight(budgetItem) {
     d3.selectAll('path.pie_piece').style('opacity', function(d) {
-        if (d.name !== budgetItem.name && !isChild(d, budgetItem.name)) {
+        if (d.n !== budgetItem.n && !isChild(d, budgetItem.n)) {
             return 0.6;
         } else {
             return 1;
@@ -281,17 +279,19 @@ function wrap(text, width) {
 
 // Update the breadcrumb trail to show the current sequence.
 function updateBreadcrumbs(nodeArray) {
-    // Always add the total as the first breadcrumb
-    nodeArray.splice(0, 0, {
-        name: 'Total',
-        depth: 0,
-        color: '#333'
-    });
-
+    // Show Total as the 'home breadcrumb' unless there are no items to display
+    if (nodeArray.length > 0)
+    {
+        nodeArray.splice(0, 0, {
+            n: 'Total',
+            depth: 0,
+            color: '#333'
+        });
+    }
     // Data join; key function combines name and depth (= position in sequence).
     var g = d3.select('#trail')
       .selectAll('g')
-      .data(nodeArray, function(d) { return d.name + d.depth; });
+      .data(nodeArray, function(d) { return d.n + d.depth; });
 
     // Add breadcrumb and label for entering nodes.
     var entering = g.enter().append('svg:g');
@@ -300,12 +300,12 @@ function updateBreadcrumbs(nodeArray) {
       .attr('points', breadcrumbPoints)
       .style('fill', function(d) { return d.color; })
       .attr('class', 'breadcrumb')
-      .attr("expense_name", function(d){
-          return d.name;
+      .attr('expense_name', function(d){
+          return d.n;
       });
 
-    $(".breadcrumb").click(function(){
-        dive_and_update(findElementFromName($(this).attr("expense_name")));
+    $('.breadcrumb').click(function(){
+        dive_and_update(findElementFromName($(this).attr('expense_name')));
       });
 
     entering.append('svg:text')
@@ -315,19 +315,17 @@ function updateBreadcrumbs(nodeArray) {
       .attr('text-anchor', 'left')
       .attr('class', 'breadcrumb_text')
       .text(function(d) {
-            return d.name.trunc(60);
+            return d.n.trunc(60);
         })
       .call(wrap, b.w - 20)
       .attr('class', 'breadcrumb_text');
 
-    $(".breadcrumb_text").click(function(){
+    $('.breadcrumb_text').click(function(){
         $(this).prev().click();
-
     });
 
     // Set position for entering and updating nodes.
-    g.transition().duration(500)
-      .attr('transform', function(d, i) {
+    g.attr('transform', function(d, i) {
         if (i === 0) {
             return '';
         } else {
@@ -341,8 +339,6 @@ function updateBreadcrumbs(nodeArray) {
     // Make the breadcrumb trail visible, if it's hidden.
     d3.select('#trail').style('visibility', '');
 }
-
-
 
 // Given a node in a partition layout, return an array of all of its ancestor
 // nodes, highest first, but excluding the root.
@@ -390,11 +386,11 @@ d3.json('/data/budget.json', function(json) {
     } else {
         console.log("test");
         window.raw_trend_data = [  ['Year', 'Cost', { role: 'annotation'}],
-            ['12-13',  roundToDP([json][0].value1213/1000,0),formatLabels([json][0].value1213)],
-            ['13-14',  roundToDP([json][0].value1314/1000,0),formatLabels([json][0].value1314)],
-            ['14-15',  roundToDP([json][0].value1415/1000,0),formatLabels([json][0].value1415)],
-            ['15-16',  roundToDP([json][0].value1516/1000,0),formatLabels([json][0].value1516)],
-            ['16-17',  roundToDP([json][0].value1617/1000,0),formatLabels([json][0].value1617)]];
+            ['12-13',  roundToDP([json][0].v1/1000,0),formatLabels([json][0].v1)],
+            ['13-14',  roundToDP([json][0].v2/1000,0),formatLabels([json][0].v2)],
+            ['14-15',  roundToDP([json][0].v3/1000,0),formatLabels([json][0].v3)],
+            ['15-16',  roundToDP([json][0].v4/1000,0),formatLabels([json][0].v4)],
+            ['16-17',  roundToDP([json][0].v5/1000,0),formatLabels([json][0].v5)]];
         populateSidebar([json][0]);
         console.log([json][0]);
     }
@@ -407,27 +403,16 @@ $('#1314').click(function() {
     updatePie('1314');
 });
 
-
 // group for centre text
 var centreGroup = vis.append('svg:g')
   .attr('class', 'centreGroup')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-//centreGroup.append('svg:text')
-//  .attr('class', 'total_head')
-//  .attr('dy', -15)
-//  .attr('text-anchor', 'middle') // text-align: right
-//  .text('');
 centreGroup.append('svg:text')
   .attr('class', 'total_body')
   .attr('dy', 15)
   .attr('text-anchor', 'middle') // text-align: right
   .text('');
-//centreGroup.append('svg:text')
-//  .attr('class', 'click_reset')
-//  .attr('dy', 60)
-//  .attr('text-anchor', 'middle') // text-align: right
-//  .text('click to zoom out');
 
 $('.total_head, .total_body, .click_reset').click(function() {
     dive(findElementFromName('total'));
@@ -519,5 +504,3 @@ $('#searchBox').typeahead(
 $('#searchBox').bind('typeahead:selected', function(obj, datum, name) {
   dive_and_update(findElementFromName(datum.t));
 });
-
-
