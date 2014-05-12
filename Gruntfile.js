@@ -453,6 +453,11 @@ module.exports = function (grunt) {
             var sourceTable = row['Source table'];
             var url = row.URL;
 
+            // If description is blank use expense/appropriation type
+            if (program && !description) {
+                description = expenseType + ' - ' + appropriationType;
+            }
+
             function getDescription() {
                 return {
                     n: description,
