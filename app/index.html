@@ -27,11 +27,11 @@
 
       var raw_trend_data = [
             ['Year', 'Cost'],
-            ['12-13', 0],
-            ['13-14',  0],
+            ['13-14', 0],
             ['14-15',  0],
             ['15-16',  0],
-            ['16-17',  0]
+            ['16-17',  0],
+            ['17-18',  0]
           ];
 
       // Callback that creates and populates a data table,
@@ -110,11 +110,11 @@
 
           redrawChart = function (budgetItem) {
             window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
-            ['12-13',  roundToDP(budgetItem.v1/1000,0),formatLabels(budgetItem.v1)],
-            ['13-14',  roundToDP(budgetItem.v2/1000,0),formatLabels(budgetItem.v2)],
-            ['14-15',  roundToDP(budgetItem.v3/1000,0),formatLabels(budgetItem.v3)],
-            ['15-16',  roundToDP(budgetItem.v4/1000,0),formatLabels(budgetItem.v4)],
-            ['16-17',  roundToDP(budgetItem.v5/1000,0),formatLabels(budgetItem.v5)]]);
+            ['13-14',  roundToDP(budgetItem.v1/1000,0),formatLabels(budgetItem.v1)],
+            ['14-15',  roundToDP(budgetItem.v2/1000,0),formatLabels(budgetItem.v2)],
+            ['15-16',  roundToDP(budgetItem.v3/1000,0),formatLabels(budgetItem.v3)],
+            ['16-17',  roundToDP(budgetItem.v4/1000,0),formatLabels(budgetItem.v4)],
+            ['17-18',  roundToDP(budgetItem.v5/1000,0),formatLabels(budgetItem.v5)]]);
             window.chart.draw(trend_data, options);
 
             parent = budgetItem;
@@ -133,7 +133,6 @@
                 budget_total = parent.v1;
               }
             }
-            console.log(budgetItem);
 
           var share_total_data = google.visualization.arrayToDataTable([
             ['Component', 'Cost'],
@@ -204,6 +203,7 @@
       <button class='last year_toggle' id='1718'>
         17-18 Budget
       </button>
+      <button id='showChangesBtn'>Show gains/losses</button>
       </div>
   </div>
   <div id="sidebar">
@@ -257,10 +257,9 @@
 
 
     Want to use this data for your own purposes? Be our guest! Check out the <a href="data/budget.json">json export</a>, or <a href="data/budget.csv">download your own .csv</a>. Or get the code from <a href="https://github.com/robbiewain/theopenbudget">github</a>.<br/>TheOpenBudget was originally developed for GovHack 2012; built by <a href="https://twitter.com/robertdapice">Rob d'Apice</a> and <a href="https://twitter.com/robbiewain">Robbie Wain</a>. Questions, comments, complaints? <a href="https://twitter.com/theopenbudget">Hit us up on Twitter</a>.     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://theopenbudget.org" data-text="Check out this amazing interactive visualisation of the Budget!" data-via="theopenbudget">Tweet</a>
-    <!-- <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script> ..>
-</div>
-</div>
+    <!-- <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script> -->
 
+</div>
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -281,11 +280,5 @@
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
-
-        <script>
-          $("button").click(function() {
-            $(this).addClass("active").siblings().removeClass("active");
-          });
-        </script>
 </body>
 </html>
