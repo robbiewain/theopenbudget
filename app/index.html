@@ -50,6 +50,9 @@
                     legend: {position: 'none'},
                     series: [{color: '#E6550D'}],
                     backgroundColor: '#fafafa',
+                    'tooltip' : {
+                      trigger: 'none'
+                    },
                     animation: {
                       duration: 500,
                       easing: 'inAndOut'
@@ -86,6 +89,9 @@
             chartArea: {left: 8, right: 8, top: 8, bottom: 8, width: 74, height: 74},
             legend: {position: 'none'},
             backgroundColor: '#fafafa',
+            'tooltip' : {
+              trigger: 'none'
+            },
             slices:
             {0: {color: "#E6550D"},
              1: {color: "#ccc"}
@@ -185,26 +191,9 @@
 
 <div id="container">
   <div id="chart_container">
-          <div id="breadcrumbs"></div>
-          <div id="chart"></div>
-          <div id="toggles" class="option">
-      <button class='first year_toggle' id='1314'>
-        13-14 Actual
-      </button>
-      <button class='active year_toggle' id='1415'>
-        14-15 Budget
-      </button>
-      <button class='year_toggle' id='1516'>
-        15-16 Budget
-      </button>
-      <button class='year_toggle' id='1617'>
-        16-17 Budget
-      </button>
-      <button class='last year_toggle' id='1718'>
-        17-18 Budget
-      </button>
-      <button id='showChangesBtn'>Show gains/losses</button>
-      </div>
+    <div id="breadcrumbs"></div>
+    <div id="chart"></div>
+
   </div>
   <div id="sidebar">
     <h1>TheOpenBudget.org</h1>
@@ -244,12 +233,27 @@
         <div id="individual_taxpayer" class="value"></div>
         <div class="clear"></div>
       </div>
-      <div class="row">
+      <div class="row" id="source_row">
         <div class="label">Source:</div>
         <div id="item_source" class="value source"></div>
         <div class="clear"></div>
       </div>
 
+    </div>
+    <div id="toggles" class="option">
+      <div class="wrapper-demo">
+        <div id="dd" class="wrapper-dropdown-2" tabindex="1"><span id="current_view_selection">14-15 Budget</span>
+          <ul class="dropdown">
+            <li><a href="#" id="1314" class="year_toggle">13-14 Actual</a></li>
+            <li><a href="#" id="1415" class="year_toggle">14-15 Budget</a></li>
+            <li><a href="#" id="1516" class="year_toggle">15-16 Budget</a></li>
+            <li><a href="#" id="1617" class="year_toggle">16-17 Budget</a></li>
+            <li><a href="#" id="1718" class="year_toggle">17-18 Budget</a></li>            
+          </ul>
+        </div>
+        <button id='showChangesBtn'>Toggle +/-</button>
+        <div class="clear"></div>
+      </div>
     </div>
   </div>
 

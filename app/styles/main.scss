@@ -71,6 +71,7 @@ body {
 #chart_container {
   width:740px;
   float:left;
+  position: relative;
 }
 
 #breadcrumbs {
@@ -91,7 +92,7 @@ body {
   h1 {
     font-size: 32px;
     line-height: 34px;
-    margin: 10px 0px 20px 0;
+    margin: 0px 0px 20px 0;
     color: #e6550d;
   }
   h2 {
@@ -115,6 +116,7 @@ body {
   }
 
   #toggles {
+    padding: 20px;
     text-align: center;
     button.year_toggle {
       height: 30px;
@@ -133,6 +135,21 @@ body {
       border: 1px solid #e6550d;
       color: #fff;
     }
+    #showChangesBtn {
+      float:right;
+
+      width: 130px;
+      border: 1px solid #e6550d;
+      background: white;
+      height: 32px;
+      text-transform: uppercase;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    #showChangesBtn.active {
+      background: #e6550d;
+      color: #fff;
+    }
   }
   #sidebar {
     float:left;
@@ -147,6 +164,7 @@ body {
       background: #fafafa;
       border: 1px dashed #e6550d;
       padding: 20px;
+      height: 500px;
       .item_name_container {
         width: 284px;
         height: 80px;
@@ -162,6 +180,7 @@ body {
           width: 250px;
           text-transform: uppercase;
           color: #666;
+          font-size: 12px;
         }
         .share_container {
           width: 90px;
@@ -209,8 +228,8 @@ body {
           line-height: 16px;
         }
         .value.source {
-          font-size: 12px;
-          line-height: 14px;
+          font-size: 10px;
+          line-height: 12px;
         }
       }
     }
@@ -241,173 +260,83 @@ body {
 
 }
 
-#narrow_container {
-  margin: 0 auto;
-  width:940px;
-  h1 {
-    font-size: 56px;
-    line-height: 60px;
-    margin: 30px 0px 0 0;
-    color: #e6550d;
-    font-family: "Arvo", verdana, sans-serif;
-  }
-  h2 {
-    margin-top: 5px;
-    font-weight: normal;
-    color: #333;
-    font-size: 14px;
-  }
-  h3 {
-    margin: 0;
-    font-weight: normal;
-    color: #666;
-  }
-  #chart {
-    width: 600px;
-    margin: 15px 0;
+.wrapper-dropdown-2 {
+    /* Size and position */
     float:left;
-    path {
-      cursor:pointer;
-    }
-  }
-  #sidebar {
-    float:left;
-    padding-left: 40px;
-    width: 300px;
-    padding-top: 20px;
-
-    button.year_toggle {
-      height: 30px;
-      padding: 0 10px;
-      background: #fafafa;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
-    button.first {
-      margin-right: 10px;
-    }
-    button.year_toggle.active {
-      background: #fd8d3c;
-      border: 1px solid #e6550d;
-    }
-    .option {
-      .title {
-//        height: 30px;
-        display: inline-block;
-        padding: 0 5px;
-        color: #333;
-        display:none;
-      }
-    }
-    .item_detail {
-      margin-top: 20px;
-      background: #fafafa;
-      border-left: 1px solid #ccc;
-      padding: 10px;
-      .row {
-        margin-bottom: 20px;
-        padding-left: 5px;
-//        height: 30px;
-        .label {
-          width: 250px;
-          text-transform: uppercase;
-          color: #666;
-          font-size: 12px;
-          line-height: 14px;
-        }
-        .value {
-          color: #e6550d;
-          font-size: 20px;
-          line-height: 24px;
-//          font-weight: bold;
-        }
-        .value.description {
-          font-size: 15px;
-          line-height: 17px;
-        }
-        .value.source {
-          font-size: 12px;
-          line-height: 14px;
-        }
-      }
-    }
-  }
-  #footer {
-    clear:both;
-    color: #888;
-    font-size: 11px;
-  }
-  .total_head {
-    font-size: 11px;
-    font-weight: bold;
-    color: #666;
+    position: relative; /* Enable absolute positioning for children and pseudo elements */
+    width: 110px;
+    padding: 8px 25px 8px 0px;
+    /* Styles */
+    background: #fff;
+    border: 1px solid #e6550d;
+    cursor: pointer;
+    outline: none;
+    font-size: 12px;
     text-transform: uppercase;
-    cursor: pointer;
-  }
-  text.total_body {
-    font-size: 32px;
-    color: #E6550D;
-    cursor: pointer;
-  }
-  .click_reset {
-    fill: #999;
-    font-size: 10px;
-    cursor: pointer;
-  }
-
+    margin: 0;
+    ul {
+      margin: 0;
+      padding: 0;
+    }
 }
-body {
-  background-color: #fff;
-  color: #333;
-  font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 13px;
-  line-height: 18px; }
 
-p, ol, ul, td {
-  font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 13px;
-  line-height: 18px; }
+.wrapper-dropdown-2:after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    margin-top: -3px;
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: grey transparent;
+}
 
-pre {
-  background-color: #eee;
-  padding: 10px;
-  font-size: 11px; }
+.wrapper-dropdown-2 .dropdown {
+  /* Size & position */
+    position: absolute;
+    top: 100%;
+    left: -1px;
+    right: -1px;
+ 
+    /* Styles */
+    background: white;
+    transition: all 0.3s ease-out;
+    list-style: none;
+    border: 1px solid #e6550d;
+ 
+    /* Hiding */
+    opacity: 0;
+    pointer-events: none;
+}
 
-a {
-  color: #000; }
-  a:visited {
-    color: #666; }
-  a:hover {
+.wrapper-dropdown-2 .dropdown li a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    padding: 10px;
+    transition: all 0.3s ease-out;
+}
+
+ 
+/* Hover state */
+ 
+.wrapper-dropdown-2 .dropdown li:hover a {
+  background: #fd8d3c;
+}
+
+.wrapper-dropdown-2.active {
+    background: #e6550d;
     color: #fff;
-    background-color: #000; }
+}
 
-div.field, div.actions {
-  margin-bottom: 10px; }
-
-#notice {
-  color: green; }
-
-.field_with_errors {
-  padding: 2px;
-  background-color: red;
-  display: table; }
-
-#error_explanation {
-  width: 450px;
-  border: 2px solid red;
-  padding: 7px;
-  padding-bottom: 0;
-  margin-bottom: 20px;
-  background-color: #f0f0f0; }
-  #error_explanation h2 {
-    text-align: left;
-    font-weight: bold;
-    padding: 5px 5px 5px 15px;
-    font-size: 12px;
-    margin: -7px;
-    margin-bottom: 0px;
-    background-color: #c00;
-    color: #fff; }
-  #error_explanation ul li {
-    font-size: 12px;
-    list-style: square; }
+.wrapper-dropdown-2.active:after {
+    border-width: 0 6px 6px 6px;
+    border-color: white transparent;
+}
+ 
+.wrapper-dropdown-2.active .dropdown {
+    opacity: 1;
+    pointer-events: auto;
+}
