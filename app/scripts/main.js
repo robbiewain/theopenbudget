@@ -2,6 +2,9 @@
 
 'use strict';
 
+var greens = ["#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
+var reds = ["#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
+
 var width = 700,
     height = 700,
     radius = Math.min(width, height) / 2,
@@ -19,11 +22,12 @@ var firstBreadCrumbWidth = 50;
 
 var currentYear = '1415';
 
+var showChanges = false;
+
 var vis = d3.select('#chart').append('svg')
     .attr('width', width)
     .attr('height', height);
 
-// group for pie
 var pieGroup = vis.append('svg:g')
     .attr('class', 'pie')
     .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
@@ -76,7 +80,7 @@ function commaSeparateNumber(val) {
 }
 
 function populateSidebar(budgetItem) {
-    var name = (budgetItem.n === 'total' ? 'Total Government Expenditure' : budgetItem.n);
+    var name = (budgetItem.i === 0 ? 'Total Government Expenditure' : budgetItem.n);
     $('#item_name').text(name);
     if(name.length > 100){
         $('#item_name').addClass("small");
@@ -125,11 +129,11 @@ function isChild(child, name) {
     return false;
 }
 
-function findElementFromName(pie_id) {
+function findElementFromID(pie_id) {
     var element = null;
     pieGroup.selectAll('path')
         .data(partition.nodes).each(function(d) {
-            if (d.pie_piece_counter === pie_id) {
+            if (d.i === pie_id) {
                 element = d;
             }
         });
@@ -138,7 +142,7 @@ function findElementFromName(pie_id) {
 
 function updatePieAnnotation(element) {
     $('.total_body').text('$' + commaSeparateNumber((element.value/1000).toFixed(0)) + 'm');
-    if (element.n === 'total') {
+    if (element.i === 0) {
         $('.total_head').text('Total Government Expenditure');
     } else {
         $('.total_head').text(element.n);
@@ -164,12 +168,12 @@ function updatePie(year) {
     .attrTween('d', arcTween);
     currentYear = year;
 
-    updatePieAnnotation(findElementFromName(0));
+    updatePieAnnotation(findElementFromID(0));
 }
 
 function dive(element) {
     // reset all values if click total
-    if (element.n === 'total') {
+    if (element.i === 0) {
         updatePie(currentYear);
     }
     else {
@@ -194,7 +198,7 @@ function dive(element) {
 
 function dive_and_update(element){
     updateBreadcrumbs(getAncestors(element));
-    window.location.hash = '#' + encodeURIComponent(element.pie_piece_counter);
+    window.location.hash = '#' + encodeURIComponent(element.i);
     dive(element);
     populateSidebar(element);
 }
@@ -282,9 +286,9 @@ function updateBreadcrumbs(nodeArray) {
     if (nodeArray.length > 0)
     {
         nodeArray.splice(0, 0, {
+            i: 0,
             n: 'Total',
-            depth: 0,
-            color: '#333'
+            depth: 0
         });
     }
     // Data join; key function combines name and depth (= position in sequence).
@@ -297,7 +301,13 @@ function updateBreadcrumbs(nodeArray) {
 
     entering.append('svg:polygon')
       .attr('points', breadcrumbPoints)
-      .style('fill', function(d) { return d.color; })
+      .style('fill', function(d) {
+        if (d.depth === 0) {
+            return '#777';
+        } else {
+            return d.color;
+        }
+    })
       .attr('class', 'breadcrumb')
       .attr('pie_id', function(d){
           return d.pie_piece_counter;
@@ -319,7 +329,6 @@ function updateBreadcrumbs(nodeArray) {
       .attr('class', 'breadcrumb_text');
 
     $('.breadcrumb_text').click(function(){
-        console.log(this);
         $(this).prev().d3Click();
     });
 
@@ -351,6 +360,53 @@ function getAncestors(node) {
     return path;
 }
 
+function updateColors(d) {
+    var c;
+    if (d.depth === 0) {
+        c = '#fff';
+    } else {
+        if (showChanges) {
+            var pc = 0;
+            pc = (d.v2 - d.v1) / d.v2;
+            if (pc < -25) {
+                c = reds[6];
+            } else if (pc < -12.5) {
+                c = reds[5];
+            } else if (pc < -6.25) {
+                c = reds[4];
+            } else if (pc < -3.125) {
+                c = reds[3];
+            } else if (pc < -1.5625) {
+                c = reds[2];
+            } else if (pc < -0.78125) {
+                c = reds[1];
+            } else if (pc < 0) {
+                c = reds[0];
+            } else if (pc === 0) {
+                c = "777";
+            } else if (pc < 0.78125) {
+                c = greens[0];
+            } else if (pc < 1.5625) {
+                c = greens[1];
+            } else if (pc < 3.125) {
+                c = greens[2];
+            } else if (pc < 6.25) {
+                c = greens[3];
+            } else if (pc < 12.5) {
+                c = greens[4];
+            } else if (pc < 25) {
+                c = greens[5];
+            } else {
+                c = greens[6];
+            }
+        } else {
+            c = color(d.i);
+        }
+    }
+    d.color = c;
+    return c;
+}
+
 d3.json('/data/budget.json', function(json) {
     initializeBreadcrumbTrail();
     path = pieGroup.data([json]).selectAll('path')
@@ -359,19 +415,7 @@ d3.json('/data/budget.json', function(json) {
                 .attr('fill-rule', 'evenodd')
                 .style('opacity', 0.6)
                 .style('stroke', '#fff')
-                .style('fill', function(d, i) {
-                    var c;
-                    if (d.depth === 0) {
-                        c = '#fff';
-                    } else {
-                        c = color(i);
-                    }
-                    d.color = c;
-                    return c;
-                })
-                .each(function(d, i){
-                    d.pie_piece_counter = i;
-                })
+                .style('fill', updateColors)
                 .attr("class", "pie_piece")
                 .each(stash)
                 .on('click', function(d) {
@@ -383,10 +427,9 @@ d3.json('/data/budget.json', function(json) {
                 });
     updatePie(currentYear);
     if (window.location.hash) {
-        var currentElement = findElementFromName(parseInt(decodeURIComponent(window.location.hash.replace('#', ''))));
+        var currentElement = findElementFromID(parseInt(decodeURIComponent(window.location.hash.replace('#', ''))));
         dive_and_update(currentElement);
     } else {
-        console.log("test");
         window.raw_trend_data = [  ['Year', 'Cost', { role: 'annotation'}],
             ['12-13',  roundToDP([json][0].v1/1000,0),formatLabels([json][0].v1)],
             ['13-14',  roundToDP([json][0].v2/1000,0),formatLabels([json][0].v2)],
@@ -394,7 +437,6 @@ d3.json('/data/budget.json', function(json) {
             ['15-16',  roundToDP([json][0].v4/1000,0),formatLabels([json][0].v4)],
             ['16-17',  roundToDP([json][0].v5/1000,0),formatLabels([json][0].v5)]];
         populateSidebar([json][0]);
-        console.log([json][0]);
     }
 });
 
@@ -404,6 +446,10 @@ $('#1314').click(function() {
 $('#1415').click(function() {
     updatePie('1415');
 });
+$('#showChangesBtn').click(function() {
+    showChanges = !showChanges;
+    path.style('fill', updateColors);
+})
 
 // group for centre text
 var centreGroup = vis.append('svg:g')
@@ -417,7 +463,7 @@ centreGroup.append('svg:text')
   .text('');
 
 $('.total_body').click(function() {
-    dive(findElementFromName(0));
+    dive(findElementFromID(0));
 });
 
 var portfolios = new Bloodhound({
@@ -502,7 +548,7 @@ $('#searchBox').typeahead(
     }
 );
 $('#searchBox').bind('typeahead:selected', function(obj, datum, name) {
-  dive_and_update(findElementFromName(datum.t));
+  dive_and_update(findElementFromID(datum.i));
 });
 
 jQuery.fn.d3Click = function () {
