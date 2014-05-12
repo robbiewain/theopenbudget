@@ -355,7 +355,7 @@ module.exports = function (grunt) {
                 explicitArray: false,
             },
             csv2json: {
-                src: '<%= config.app %>/data/budget.csv',
+                src: '<%= config.app %>/data/budget_13actual_dummy.csv',
                 dest: '.tmp/data/budgetcsv.json'
             }
         }
@@ -463,52 +463,85 @@ module.exports = function (grunt) {
                     v5: value1617,
                     sd: sourceDocument,
                     st: sourceTable,
-                    u: url
+                    u: url,
+                    children: []
                 };
             }
             function getProgram() {
-                return {
+                var p = {
                     n: program,
                     v1: value1213,
                     v2: value1314,
                     v3: value1415,
                     v4: value1516,
-                    v5: value1617,
-                    children: [getDescription()]
+                    v5: value1617
                 };
+                if (description) {
+                    p.children = [getDescription()]
+                } else {
+                    p.sd = sourceDocument;
+                    p.st = sourceTable;
+                    p.u = url;
+                    p.children = [];
+                }
+                return p;
             }
             function getOutcome() {
-                return {
+                var o = {
                     n: outcome,
                     v1: value1213,
                     v2: value1314,
                     v3: value1415,
                     v4: value1516,
-                    v5: value1617,
-                    children: [getProgram()]
+                    v5: value1617
                 };
+                if (program) {
+                    o.children = [getProgram()];
+                } else {
+                    o.sd = sourceDocument;
+                    o.st = sourceTable;
+                    o.u = url;
+                    o.children = [];
+                }
+                return o;
             }
             function getDepartment() {
-                return {
+                var d = {
                     n: department,
                     v1: value1213,
                     v2: value1314,
                     v3: value1415,
                     v4: value1516,
-                    v5: value1617,
-                    children: [getOutcome()]
+                    v5: value1617
                 };
+                if (outcome) {
+                    d.children = [getOutcome()];
+                } else {
+                    d.sd = sourceDocument;
+                    d.st = sourceTable;
+                    d.u = url;
+                    d.children = [];
+                }
+                return d;
             }
             function getPortfolio() {
-                return {
+                var p = {
                     n: portfolio,
                     v1: value1213,
                     v2: value1314,
                     v3: value1415,
                     v4: value1516,
-                    v5: value1617,
-                    children: [getDepartment()]
+                    v5: value1617
                 };
+                if (department) {
+                    p.children = [getDepartment()];
+                } else {
+                    p.sd = sourceDocument;
+                    p.st = sourceTable;
+                    p.u = url;
+                    p.children = [];
+                }
+                return p;
             }
 
             // Add to total
