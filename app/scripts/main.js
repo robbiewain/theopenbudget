@@ -2,8 +2,8 @@
 
 'use strict';
 
-var greens = ["#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
-var reds = ["#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
+var greens = ["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
+var reds = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
 
 var width = 700,
     height = 700,
@@ -367,37 +367,41 @@ function updateColors(d) {
     } else {
         if (showChanges) {
             var pc = 0;
-            pc = (d.v2 - d.v1) / d.v2;
-            if (pc < -25) {
+            pc = (d.v2 - d.v1) / d.v2 * 100;
+            if (pc < -0.64) {
+                c = reds[7];
+            } else if (pc < -0.32) {
                 c = reds[6];
-            } else if (pc < -12.5) {
+            } else if (pc < -0.16) {
                 c = reds[5];
-            } else if (pc < -6.25) {
+            } else if (pc < -0.08) {
                 c = reds[4];
-            } else if (pc < -3.125) {
+            } else if (pc < -0.04) {
                 c = reds[3];
-            } else if (pc < -1.5625) {
+            } else if (pc < -0.02) {
                 c = reds[2];
-            } else if (pc < -0.78125) {
+            } else if (pc < -0.01) {
                 c = reds[1];
             } else if (pc < 0) {
                 c = reds[0];
             } else if (pc === 0) {
                 c = "777";
-            } else if (pc < 0.78125) {
+            } else if (pc < 0.01) {
                 c = greens[0];
-            } else if (pc < 1.5625) {
+            } else if (pc < 0.02) {
                 c = greens[1];
-            } else if (pc < 3.125) {
+            } else if (pc < 0.04) {
                 c = greens[2];
-            } else if (pc < 6.25) {
+            } else if (pc < 0.08) {
                 c = greens[3];
-            } else if (pc < 12.5) {
+            } else if (pc < 0.16) {
                 c = greens[4];
-            } else if (pc < 25) {
+            } else if (pc < 0.32) {
                 c = greens[5];
-            } else {
+            } else if (pc < 0.64) {
                 c = greens[6];
+            } else {
+                c = greens[7];
             }
         } else {
             c = color(d.i);
