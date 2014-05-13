@@ -334,7 +334,11 @@ function updateBreadcrumbs(nodeArray) {
           return d.pie_piece_counter;
       })
       .on("click",function(d){
-        dive_and_update(d);
+        if (d.depth == 0){
+            dive_and_update(findElementFromID(0));
+        } else {
+            dive_and_update(d);
+        }
       });
 
     entering.append('svg:text')
