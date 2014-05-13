@@ -378,7 +378,8 @@ a, a:hover, a:visited {
 .coming_soon_text {
   position: absolute;
   top: 300px;
-  left: 330px;
+  left: 50%;
+  margin-left: -440px;
   font-size: 28px;
   font-weight: bold;
   color: #777;
