@@ -9,6 +9,11 @@
 body {
   margin: 0;
   overflow-y: scroll;
+  position: relative;
+}
+
+a, a:hover, a:visited {
+  color: #e6550d;
 }
 
 .searchHeading {
