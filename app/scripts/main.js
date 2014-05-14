@@ -23,7 +23,7 @@ var firstBreadCrumbWidth = 50;
 
 var currentYear = '1415';
 
-var showChanges = false;
+var showChanges = true;
 
 var vis = d3.select('#chart').append('svg')
     .attr('width', width)
@@ -478,12 +478,6 @@ $('.year_toggle').click(function(e) {
 
 });
 
-$('#showChangesBtn').click(function() {
-    showChanges = !showChanges;
-    $(this).toggleClass("active");
-    path.style('fill', updateColors);
-})
-
 // group for centre text
 var centreGroup = vis.append('svg:g')
   .attr('class', 'centreGroup')
@@ -506,34 +500,57 @@ $('.total_body').click(function() {
     dive(findElementFromID(0));
 });
 
+function queryTokenizer(s) { return s.replace('(', '').replace(')', '').split(/\s+/); }
+function datumTokenizer(d) { return Bloodhound.tokenizers.nonword(d.t.replace(')','').replace('(','')); }
+
 var portfolios = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/data/portfolios.json',
+    datumTokenizer: datumTokenizer,
+    queryTokenizer: queryTokenizer,
+    prefetch: {
+        url: '/data/portfolios.json',
+        ttl: 300000,
+        cacheKey: 'portfoliosCache'
+    }
 });
 
 var departments = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/data/departments.json'
+    datumTokenizer: datumTokenizer,
+    queryTokenizer: queryTokenizer,
+    prefetch: {
+        url: '/data/departments.json',
+        ttl: 300000,
+        cacheKey: 'departmentsCache'
+    }
 });
 
 var outcomes = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/data/outcomes.json'
+    datumTokenizer: datumTokenizer,
+    queryTokenizer: queryTokenizer,
+    prefetch: {
+        url: '/data/outcomes.json',
+        ttl: 300000,
+        cacheKey: 'outcomesCache'
+    }
 });
 
 var programs = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/data/programs.json'
+    datumTokenizer: datumTokenizer,
+    queryTokenizer: queryTokenizer,
+    prefetch: {
+        url: '/data/programs.json',
+        ttl: 300000,
+        cacheKey: 'programsCache'
+    }
 });
 
 var descriptions = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('t'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/data/descriptions.json'
+    datumTokenizer: datumTokenizer,
+    queryTokenizer: queryTokenizer,
+    prefetch: {
+        url: '/data/descriptions.json',
+        ttl: 300000,
+        cacheKey: 'descriptionsCache'
+    }
 });
 
 portfolios.initialize();
