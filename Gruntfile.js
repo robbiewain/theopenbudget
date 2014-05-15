@@ -285,6 +285,14 @@ module.exports = function (grunt) {
                 cwd: '<%= config.app %>/styles',
                 dest: '.tmp/styles/',
                 src: '{,*/}*.css'
+            },
+            images: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= config.app %>/images',
+                    src: '{,*/}*.{gif,jpeg,jpg,png}',
+                    dest: '<%= config.dist %>/images'
+                }]
             }
         },
 
@@ -318,8 +326,9 @@ module.exports = function (grunt) {
                 'sass',
                 'copy:styles',
                 'copy:data',
-                'imagemin',
-                'svgmin'
+                'copy:images',
+                //'imagemin',
+                //'svgmin'
             ]
         },
 
