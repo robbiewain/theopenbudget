@@ -105,7 +105,9 @@ module.exports = function (grunt) {
                         '<%= config.dist %>/*',
                         '<%= config.dist %>/scripts/*',
                         '<%= config.dist %>/styles/*',
-                        '!<%= config.dist %>/.git*'
+                        '!<%= config.dist %>/.git*',
+                        '<%= config.dist %>/images/*',
+                        '<%= config.dist %>/data/*'
                     ]
                 }]
             },
@@ -159,7 +161,6 @@ module.exports = function (grunt) {
                     src: [
                         '<%= config.dist %>/scripts/{,*/}*.js',
                         '<%= config.dist %>/styles/{,*/}*.css',
-                        '<%= config.dist %>/images/{,*/}*.*',
                         '<%= config.dist %>/styles/fonts/{,*/}*.*',
                         '<%= config.dist %>/*.{ico,png}'
                     ]
@@ -328,7 +329,7 @@ module.exports = function (grunt) {
                 'copy:data',
                 'copy:images',
                 //'imagemin',
-                //'svgmin'
+                'svgmin'
             ]
         },
 
