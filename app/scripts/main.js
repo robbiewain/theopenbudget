@@ -410,7 +410,7 @@ function updateColors(d) {
             } else if (pc < 0) {
                 c = reds[1];
             } else if (pc === 0) {
-                c = "777";
+                c = "ccc";
             } else if (pc < 0.01) {
                 c = greens[1];
             } else if (pc < 0.02) {
@@ -441,7 +441,6 @@ d3.json('/data/budget.json', function(json) {
     path = pieGroup.data([json]).selectAll('path')
                 .data(partition.nodes).enter().append('path')
                 .attr('d', arc)
-                .attr('fill-rule', 'evenodd')
                 .style('opacity', 0.6)
                 .style('stroke', '#fff')
                 .style('fill', updateColors)

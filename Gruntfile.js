@@ -105,7 +105,9 @@ module.exports = function (grunt) {
                         '<%= config.dist %>/*',
                         '<%= config.dist %>/scripts/*',
                         '<%= config.dist %>/styles/*',
-                        '!<%= config.dist %>/.git*'
+                        '!<%= config.dist %>/.git*',
+                        '<%= config.dist %>/images/*',
+                        '<%= config.dist %>/data/*'
                     ]
                 }]
             },
@@ -159,7 +161,6 @@ module.exports = function (grunt) {
                     src: [
                         '<%= config.dist %>/scripts/{,*/}*.js',
                         '<%= config.dist %>/styles/{,*/}*.css',
-                        '<%= config.dist %>/images/{,*/}*.*',
                         '<%= config.dist %>/styles/fonts/{,*/}*.*',
                         '<%= config.dist %>/*.{ico,png}'
                     ]
@@ -285,6 +286,14 @@ module.exports = function (grunt) {
                 cwd: '<%= config.app %>/styles',
                 dest: '.tmp/styles/',
                 src: '{,*/}*.css'
+            },
+            images: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= config.app %>/images',
+                    src: '{,*/}*.{gif,jpeg,jpg,png}',
+                    dest: '<%= config.dist %>/images'
+                }]
             }
         },
 
@@ -318,7 +327,8 @@ module.exports = function (grunt) {
                 'sass',
                 'copy:styles',
                 'copy:data',
-                'imagemin',
+                'copy:images',
+                //'imagemin',
                 'svgmin'
             ]
         },
