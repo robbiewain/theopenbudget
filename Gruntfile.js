@@ -273,6 +273,13 @@ module.exports = function (grunt) {
                     ]
                 }]
             },
+            csv: {
+                expand: true,
+                dot: true,
+                cwd: '<%= config.app %>/data',
+                dest: '.tmp/data/',
+                src: 'budget.csv'
+            },
             data: {
                 expand: true,
                 dot: true,
@@ -396,6 +403,7 @@ module.exports = function (grunt) {
         'clean:dist',
         'useminPrepare',
         'convert',
+        'copy:csv',
         'processJSON',
         'concurrent:dist',
         'autoprefixer',
