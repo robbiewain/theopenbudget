@@ -43,11 +43,11 @@
 
       var raw_trend_data = [
             ['Year', 'Cost'],
-            ['13-14', 0],
-            ['14-15',  0],
-            ['15-16',  0],
-            ['16-17',  0],
-            ['17-18',  0]
+            ['14-15', 0],
+            ['15-16', 0],
+            ['16-17', 0],
+            ['17-18', 0],
+            ['18-19', 0]
           ];
 
       // Callback that creates and populates a data table,
@@ -112,11 +112,11 @@
 
           redrawChart = function (budgetItem) {
             window.trend_data = google.visualization.arrayToDataTable([  ['Year', 'Cost', { role: 'annotation'}],
-            ['13-14',  roundToDP(budgetItem.v1/1000,0),formatLabels(budgetItem.v1)],
-            ['14-15',  roundToDP(budgetItem.v2/1000,0),formatLabels(budgetItem.v2)],
-            ['15-16',  roundToDP(budgetItem.v3/1000,0),formatLabels(budgetItem.v3)],
-            ['16-17',  roundToDP(budgetItem.v4/1000,0),formatLabels(budgetItem.v4)],
-            ['17-18',  roundToDP(budgetItem.v5/1000,0),formatLabels(budgetItem.v5)]]);
+            ['14-15',  roundToDP(budgetItem.v1/1000,0),formatLabels(budgetItem.v1)],
+            ['15-16',  roundToDP(budgetItem.v2/1000,0),formatLabels(budgetItem.v2)],
+            ['16-17',  roundToDP(budgetItem.v3/1000,0),formatLabels(budgetItem.v3)],
+            ['17-18',  roundToDP(budgetItem.v4/1000,0),formatLabels(budgetItem.v4)],
+            ['18-19',  roundToDP(budgetItem.v5/1000,0),formatLabels(budgetItem.v5)]]);
             window.chart.draw(trend_data, options);
 
             parent = budgetItem;
@@ -251,13 +251,13 @@
     </div>
     <div id="toggles" class="option">
       <div class="wrapper-demo">
-        <div id="dd" class="wrapper-dropdown-2" tabindex="1"><span id="current_view_selection">14-15 Budget</span>
+        <div id="dd" class="wrapper-dropdown-2" tabindex="1"><span id="current_view_selection">15-16 Budget</span>
           <ul class="dropdown">
-            <li><a href="#" id="1314" class="year_toggle">13-14 Actual</a></li>
-            <li><a href="#" id="1415" class="year_toggle">14-15 Budget</a></li>
+            <li><a href="#" id="1415" class="year_toggle">14-15 Actual</a></li>
             <li><a href="#" id="1516" class="year_toggle">15-16 Budget</a></li>
             <li><a href="#" id="1617" class="year_toggle">16-17 Budget</a></li>
             <li><a href="#" id="1718" class="year_toggle">17-18 Budget</a></li>
+            <li><a href="#" id="1819" class="year_toggle">18-19 Budget</a></li>
           </ul>
         </div>
         <div class="clear"></div>
@@ -284,7 +284,9 @@
         <!-- endbower -->
         <!-- endbuild -->
 
-
+        <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <!-- endbuild -->
 
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -294,9 +296,5 @@
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-32376901-1');ga('send','pageview');
         </script>
-
-        <!-- build:js({app,.tmp}) scripts/main.js -->
-        <script src="scripts/main.js"></script>
-        <!-- endbuild -->
 </body>
 </html>
