@@ -21,7 +21,7 @@ var b = {
 
 var firstBreadCrumbWidth = 50;
 
-var currentYear = '1516';
+var currentYear = '1617';
 
 var showChanges = true;
 
@@ -155,19 +155,19 @@ function updatePie(year) {
             return d.value;
         }
         else {
-            if (year === '1415') {
+            if (year === '1516') {
                 return d.v1;
             }
-            else if (year === '1516' ) {
+            else if (year === '1617' ) {
                 return d.v2;
-            } 
-            else if (year === '1617') {
-                return d.v3;
             }
             else if (year === '1718') {
-                return d.v4;
+                return d.v3;
             }
             else if (year === '1819') {
+                return d.v4;
+            }
+            else if (year === '1920') {
                 return d.v5;
             }
         }
@@ -192,19 +192,19 @@ function dive(element) {
             if (d.i !== element.i && !isChild(d, element.i)) {
                 return 0;
             } else {
-                if (currentYear === '1415') {
+                if (currentYear === '1516') {
                     return d.v1;
                 }
-                else if (currentYear === '1516' ) {
+                else if (currentYear === '1617' ) {
                     return d.v2;
                 }
-                else if (currentYear === '1617') {
+                else if (currentYear === '1718') {
                     return d.v3;
                 }
-                else if (currentYear === '1718') {
+                else if (currentYear === '1819') {
                     return d.v4;
                 }
-                else if (currentYear === '1819') {
+                else if (currentYear === '1920') {
                     return d.v5;
                 }
             }
@@ -492,7 +492,7 @@ centreGroup.append('svg:text')
   .attr('class', 'total_caption')
   .attr('dy', -15)
   .attr('text-anchor', 'middle') // text-align: right
-  .text('15-16 BUDGET:');
+  .text('16-17 BUDGET:');
 
 
 $('.total_body').click(function() {
