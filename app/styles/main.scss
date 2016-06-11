@@ -24,7 +24,7 @@ a, a:hover, a:visited {
   font-size: 11px;
 }
 
-.tt-dropdown-menu {
+.tt-menu {
   background: #fff;
   width: 318px;
   max-height: 600px;
@@ -46,7 +46,7 @@ a, a:hover, a:visited {
 
 .tt-suggestion {
   cursor: pointer;
-  padding: 1px 15px;
+  padding: 15px;
   margin: 5px 5px 0 5px;
   background: #eaeaea;
 }
@@ -60,7 +60,6 @@ a, a:hover, a:visited {
 .tt-suggestions {
   border: none;
 }
-
 
 #searchBox {
   width: 302px;
